@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace InventoryManagementSystem.Infrastructure.Configrations
+namespace InventoryManagementSystem.Infrastructure.Configurations
 {
     public class OrderConfigurations : IEntityTypeConfiguration<Order>
     {
@@ -21,6 +21,10 @@ namespace InventoryManagementSystem.Infrastructure.Configrations
             builder.Property(i => i.TotalPrice)
                    .HasDefaultValue(0)
                    .HasColumnType("money");
+
+            builder
+                .Property(i => i.CreatedAt)
+                .HasDefaultValueSql("GetDate()");
         }
     }
 }

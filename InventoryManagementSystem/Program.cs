@@ -1,7 +1,16 @@
+using BookStore.Seeds;
+using InventoryManagementSystem.Controllers;
 using InventoryManagementSystem.Domain.Models;
 using InventoryManagementSystem.Infrastructure.Data;
+using InventoryManagementSystem.Infrastructure.Repositories;
+using InventoryManagementSystem.Infrastructure.Seeds;
+using InventoryManagementSystem.Infrastructure.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Serilog;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,15 +30,72 @@ builder.Services.AddDbContext<ApplicationDbContext>(
 // ______________________________ End Sql Conf_________________________________//
 
 
+// ______________________________ Dependancy Injections _________________________________//
 
+    builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
+    builder.Services.AddScoped<IAuthService, AuthService>();
+    builder.Services.AddScoped<IRoleService, RoleService>();
+// ______________________________ End Dependancy Injections _________________________________//
 
 
 
 // ______________________________ Identity Confs _________________________________//
 
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
-    .AddEntityFrameworkStores<ApplicationDbContext>();
-// ______________________________ End Sql Conf_________________________________//
+
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>(
+    options =>
+    {
+        options.Password.RequireUppercase = false;
+        options.Password.RequireLowercase = false;
+        options.Password.RequireDigit = false;
+        options.Password.RequireNonAlphanumeric = false;
+        options.Password.RequiredLength = 8;
+    }
+    ).AddEntityFrameworkStores<ApplicationDbContext>();
+
+
+// ------------------------------------------------------- //
+
+// ------------------------- JwtBearer Conf ----------------------//
+
+builder.Services.AddAuthentication(
+    options =>
+    {
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    }).AddJwtBearer(op =>
+    {
+        op.RequireHttpsMetadata = true;
+        op.SaveToken = false;
+        op.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+
+            ValidIssuer = builder.Configuration["JWT:Issuer"],
+            ValidAudience = builder.Configuration["JWT:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:SECRETKEY"]))
+        };
+    });
+
+// ------------------------------------------------------- //
+
+// ------------------------- Other Confs ----------------------//
+
+// Logger
+var logger = new LoggerConfiguration().ReadFrom.Configuration(builder.Configuration).CreateLogger();
+
+builder.Logging.AddSerilog(logger);
+
+// auto mapper
+builder.Services.AddAutoMapper(typeof(Program));
+
+// ------------------------------------------------------- //
+
+
+
 
 var app = builder.Build();
 
@@ -37,6 +103,41 @@ var app = builder.Build();
 
 
 
+
+// ---------------------------  Data Seeding    ---------------------------- //
+using var scope = app.Services.CreateScope();
+var services = scope.ServiceProvider;
+var loggerAccounts = services.GetRequiredService<ILogger<AccountsController>>();
+
+var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+
+var authService = services.GetRequiredService<IAuthService>();
+var roleService = services.GetRequiredService<IRoleService>();
+
+
+
+
+try
+{
+    if (!roleManager.Roles.Any())
+    {
+
+        await DefaultRoles.SeedAsync(roleService);
+        
+        await DefaultUsers.SeedCustomerAsync(authService, roleService, roleManager);
+        await DefaultUsers.SeedSupplierAsync(authService, roleService, roleManager);
+        await DefaultUsers.SeedAdminAsync(authService, roleService, roleManager);
+        await DefaultUsers.SeedSuperAdminAsync(authService, roleService, roleManager);
+
+    }
+}
+catch (Exception ex)
+{
+    // todo: add to logger
+    loggerAccounts.LogError(ex, "an Error ocurred while seeding initial data");
+}
+
+// ------------------------------------------------------- //
 
 
 

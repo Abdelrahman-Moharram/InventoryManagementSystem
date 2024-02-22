@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 
-namespace InventoryManagementSystem.Infrastructure.Configrations
+namespace InventoryManagementSystem.Infrastructure.Configurations
 {
     public class SupplierConfigurations : IEntityTypeConfiguration<Supplier>
     {

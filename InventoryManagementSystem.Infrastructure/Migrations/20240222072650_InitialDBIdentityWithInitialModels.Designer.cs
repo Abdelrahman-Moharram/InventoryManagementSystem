@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InventoryManagementSystem.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240221145400_AddInitialModels")]
-    partial class AddInitialModels
+    [Migration("20240222072650_InitialDBIdentityWithInitialModels")]
+    partial class InitialDBIdentityWithInitialModels
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -113,7 +113,9 @@ namespace InventoryManagementSystem.Infrastructure.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GetDate()");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
@@ -142,7 +144,9 @@ namespace InventoryManagementSystem.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GetDate()");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
@@ -167,7 +171,9 @@ namespace InventoryManagementSystem.Infrastructure.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GetDate()");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
@@ -202,7 +208,9 @@ namespace InventoryManagementSystem.Infrastructure.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GetDate()");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
@@ -244,7 +252,9 @@ namespace InventoryManagementSystem.Infrastructure.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GetDate()");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
@@ -298,7 +308,9 @@ namespace InventoryManagementSystem.Infrastructure.Migrations
                         .HasDefaultValue(0);
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GetDate()");
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
@@ -488,17 +500,18 @@ namespace InventoryManagementSystem.Infrastructure.Migrations
                     b.HasOne("InventoryManagementSystem.Domain.Models.Inventory", "Inventory")
                         .WithMany("ProductItems")
                         .HasForeignKey("InventoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("InventoryManagementSystem.Domain.Models.Order", "Order")
                         .WithMany("ProductItems")
-                        .HasForeignKey("OrderId");
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("InventoryManagementSystem.Domain.Models.Product", "Product")
                         .WithMany("ProductItems")
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("InventoryManagementSystem.Domain.Models.Supplier", null)
@@ -508,7 +521,7 @@ namespace InventoryManagementSystem.Infrastructure.Migrations
                     b.HasOne("InventoryManagementSystem.Domain.Models.ProductsInventory", "ProductsInventory")
                         .WithMany("ProductItems")
                         .HasForeignKey("ProductsInventoryProductId", "ProductsInventoryInventoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Inventory");

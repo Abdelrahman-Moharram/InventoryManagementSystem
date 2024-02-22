@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace InventoryManagementSystem.Infrastructure.Configrations
+namespace InventoryManagementSystem.Infrastructure.Configurations
 {
     public class ApplicationUserConfigurations : IEntityTypeConfiguration<ApplicationUser>
     {

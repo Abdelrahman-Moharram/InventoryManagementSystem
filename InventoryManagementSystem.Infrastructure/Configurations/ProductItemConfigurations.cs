@@ -7,13 +7,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace InventoryManagementSystem.Infrastructure.Configrations
+namespace InventoryManagementSystem.Infrastructure.Configurations
 {
     public class ProductItemConfigurations : IEntityTypeConfiguration<ProductItem>
     {
         public void Configure(EntityTypeBuilder<ProductItem> builder)
         {
-
+            builder
+                .Property(i => i.CreatedAt)
+                .HasDefaultValueSql("GetDate()");
             builder.HasKey(
                 i => new { i.ProductId, i.InventoryId });
 

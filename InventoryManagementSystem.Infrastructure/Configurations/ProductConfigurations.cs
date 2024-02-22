@@ -7,12 +7,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace InventoryManagementSystem.Infrastructure.Configrations
+namespace InventoryManagementSystem.Infrastructure.Configurations
 {
     public class ProductConfigurations : IEntityTypeConfiguration<Product>
     {
         public void Configure(EntityTypeBuilder<Product> builder)
         {
+            builder
+                .Property(i => i.CreatedAt)
+                .HasDefaultValueSql("GetDate()");
+
             builder.Property(i => i.Name)
                 .IsRequired()
                 .HasMaxLength(255);
@@ -24,6 +28,9 @@ namespace InventoryManagementSystem.Infrastructure.Configrations
             builder.HasOne(i => i.Category)
                 .WithMany(ii=>ii.Products)
                 .HasForeignKey(i => i.CategoryId);
+
+
+
 
             builder
                 .HasMany(i => i.Inventories)
@@ -47,6 +54,10 @@ namespace InventoryManagementSystem.Infrastructure.Configrations
                         j
                         .Property(i => i.Amount)
                         .HasDefaultValue(0);
+
+                        j
+                        .Property(i => i.CreatedAt)
+                        .HasDefaultValueSql("GetDate()");
 
                     }
                 );

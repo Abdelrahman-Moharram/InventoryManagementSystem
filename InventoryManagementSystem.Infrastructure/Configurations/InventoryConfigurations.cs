@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 
-namespace InventoryManagementSystem.Infrastructure.Configrations
+namespace InventoryManagementSystem.Infrastructure.Configurations
 {
     public class InventoryConfigurations : IEntityTypeConfiguration<Inventory>
     {
@@ -13,6 +13,9 @@ namespace InventoryManagementSystem.Infrastructure.Configrations
                 .IsRequired()
                 .HasMaxLength(255);
 
+            builder
+                .Property(i => i.CreatedAt)
+                .HasDefaultValueSql("GetDate()");
         }
     }
 }

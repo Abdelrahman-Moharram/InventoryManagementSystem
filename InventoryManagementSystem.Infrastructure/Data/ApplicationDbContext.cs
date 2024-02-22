@@ -1,13 +1,9 @@
 ﻿using InventoryManagementSystem.Domain.Models;
-using InventoryManagementSystem.Infrastructure.Configrations;
+using InventoryManagementSystem.Infrastructure.Configurations;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace InventoryManagementSystem.Infrastructure.Data
 {
@@ -37,7 +33,6 @@ namespace InventoryManagementSystem.Infrastructure.Data
 
             new ApplicationUserConfigurations().Configure(builder.Entity<ApplicationUser>());
 
-            new CustomerConfigurations().Configure(builder.Entity<Customer>());
             new CustomerConfigurations().Configure(builder.Entity<Customer>());
             new SupplierConfigurations().Configure(builder.Entity<Supplier>());
             new InventoryConfigurations().Configure(builder.Entity<Inventory>());

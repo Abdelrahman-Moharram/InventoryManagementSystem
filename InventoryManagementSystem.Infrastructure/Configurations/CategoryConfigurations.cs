@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace InventoryManagementSystem.Infrastructure.Configrations
+namespace InventoryManagementSystem.Infrastructure.Configurations
 {
     public class CategoryConfigurations : IEntityTypeConfiguration<Category>
     {
@@ -11,6 +11,10 @@ namespace InventoryManagementSystem.Infrastructure.Configrations
             builder.Property(i => i.Name)
                 .IsRequired()
                 .HasMaxLength(255);
+
+            builder
+                .Property(i => i.CreatedAt)
+                .HasDefaultValueSql("GetDate()");
         }
     }
 }
