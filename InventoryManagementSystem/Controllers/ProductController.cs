@@ -7,28 +7,27 @@ namespace InventoryManagementSystem.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CategoriesController : ControllerBase
+    public class ProductController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
 
-        public CategoriesController(IUnitOfWork unitOfWork)
+        public ProductController(UnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
 
 
-
-
         [HttpGet("")]
         public async Task<IActionResult> Index()
         {
-            return Ok(await _unitOfWork.Categories.GetAllAsync());
+            return Ok(await _unitOfWork.Products.GetAllAsync());
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Details(string id)
         {
-            return Ok(await _unitOfWork.Categories.GetByIdAsync(id));
+            return Ok(await _unitOfWork.Products.GetByIdAsync(id));
         }
+
     }
 }

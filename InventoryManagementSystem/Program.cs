@@ -32,7 +32,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(
 
 // ______________________________ Dependancy Injections _________________________________//
 
-    builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
+    builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
     builder.Services.AddScoped<IAuthService, AuthService>();
     builder.Services.AddScoped<IRoleService, RoleService>();
 // ______________________________ End Dependancy Injections _________________________________//

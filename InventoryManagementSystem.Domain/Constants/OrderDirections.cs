@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace InventoryManagementSystem.Domain.Constants
 {
-    public enum OtherConstants
+    public static class OrderDirections
     {
-        Permissions,
+        public static string Ascending = "as";
+        public static string Descending = "ds";
+
     }
 }
