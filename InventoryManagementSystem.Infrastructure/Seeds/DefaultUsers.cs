@@ -1,6 +1,6 @@
 ﻿using InventoryManagementSystem.Domain.Constants;
 using InventoryManagementSystem.Domain.DTOs.Account;
-using InventoryManagementSystem.Infrastructure.Services;
+using InventoryManagementSystem.Infrastructure.Services.AuthServices;
 using Microsoft.AspNetCore.Identity;
 
 namespace InventoryManagementSystem.Infrastructure.Seeds

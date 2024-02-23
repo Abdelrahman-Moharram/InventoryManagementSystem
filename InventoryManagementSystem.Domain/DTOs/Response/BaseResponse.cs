@@ -3,6 +3,6 @@
     public class BaseResponse
     {
         public string? Message { get; set; }
-        public bool isAuthenticated { get; set; } = false;
+        public bool IsSucceeded { get; set; } = false;
     }
 }

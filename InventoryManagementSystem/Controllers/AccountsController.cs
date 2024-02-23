@@ -1,6 +1,6 @@
 ﻿using InventoryManagementSystem.Domain.DTOs.Account;
 using InventoryManagementSystem.Domain.DTOs.Response;
-using InventoryManagementSystem.Infrastructure.Services;
+using InventoryManagementSystem.Infrastructure.Services.AuthServices;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -22,7 +22,7 @@ namespace InventoryManagementSystem.Controllers
             if (ModelState.IsValid)
             {
                 BaseResponse result = await _authService.Register(register);
-                if (result.isAuthenticated)
+                if (result.IsSucceeded)
                     return Ok(result);
                 return Unauthorized(result.Message);
             }
@@ -35,7 +35,7 @@ namespace InventoryManagementSystem.Controllers
             if (ModelState.IsValid)
             {
                 BaseResponse result = await _authService.Login(login);
-                if (result.isAuthenticated)
+                if (result.IsSucceeded)
                     return Ok(result);
                 return Unauthorized(result.Message);
             }

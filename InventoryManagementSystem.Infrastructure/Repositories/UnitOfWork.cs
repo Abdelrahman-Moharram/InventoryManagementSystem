@@ -19,18 +19,21 @@ namespace InventoryManagementSystem.Infrastructure.Repositories
         public IBaseRepository<ProductsInventory> ProductsInventories { get; private set;}
         public IBaseRepository<ProductItem> ProductItems { get; private set;}
         public IBaseRepository<Order> Orders { get; private set;}
+        public IBaseRepository<Brand> Brands { get; private set; }
+
 
         public UnitOfWork(ApplicationDbContext context)
         {
             _context = context;
-            Customers           = new BaseRepository<Customer>(_context);
-            Suppliers           = new BaseRepository<Supplier>(_context);
-            Inventories          = new BaseRepository<Inventory>(_context);
-            Categories           = new BaseRepository<Category>(_context);
-            Products            = new ProductRepository(_context);
-            ProductsInventories  = new BaseRepository<ProductsInventory>(_context);
-            ProductItems        = new BaseRepository<ProductItem>(_context);
-            Orders              = new BaseRepository<Order>(_context);
+            Customers               = new BaseRepository<Customer>(_context);
+            Suppliers               = new BaseRepository<Supplier>(_context);
+            Inventories             = new BaseRepository<Inventory>(_context);
+            Categories              = new BaseRepository<Category>(_context);
+            Products                = new ProductRepository(_context);
+            ProductsInventories     = new BaseRepository<ProductsInventory>(_context);
+            ProductItems            = new BaseRepository<ProductItem>(_context);
+            Orders                  = new BaseRepository<Order>(_context);
+            Brands                  = new BaseRepository<Brand>(_context);
         }
 
         public async Task<int> Save()

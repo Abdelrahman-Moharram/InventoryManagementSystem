@@ -9,7 +9,8 @@
         Product,
         ProductsInventory,
         ProductItem,
-        Order
+        Order,
+        Brand
 
     }
 }

@@ -1,6 +1,6 @@
 ﻿using InventoryManagementSystem.Domain.Constants;
 using InventoryManagementSystem.Domain.DTOs.Account;
-using InventoryManagementSystem.Infrastructure.Services;
+using InventoryManagementSystem.Infrastructure.Services.AuthServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -37,7 +37,7 @@ namespace InventoryManagementSystem.Controllers
             if (ModelState.IsValid)
             {
                 var response = await _roleService.AddRole(roleDTO.roleName);
-                if (response.isAuthenticated)
+                if (response.IsSucceeded)
                     return Ok(response.Message);
                 return BadRequest(response.Message);
             }
@@ -55,7 +55,7 @@ namespace InventoryManagementSystem.Controllers
             if (ModelState.IsValid)
             {
                 var response = await _roleService.RemoveRole(roleDTO.roleName);
-                if (response.isAuthenticated)
+                if (response.IsSucceeded)
                     return Ok(response.Message);
                 return BadRequest(response.Message);
             }
@@ -101,7 +101,7 @@ namespace InventoryManagementSystem.Controllers
             if (ModelState.IsValid)
             {
                 var response = await _roleService.AddToRoleAsync(roleDTO);
-                if (response.isAuthenticated)
+                if (response.IsSucceeded)
                     return Ok(response.Message);
                 return BadRequest(response.Message);
             }
@@ -116,7 +116,7 @@ namespace InventoryManagementSystem.Controllers
             if (ModelState.IsValid)
             {
                 var response = await _roleService.RemoveFromRoleAsync(roleDTO);
-                if (response.isAuthenticated)
+                if (response.IsSucceeded)
                     return Ok(response.Message);
                 return BadRequest(response.Message);
             }

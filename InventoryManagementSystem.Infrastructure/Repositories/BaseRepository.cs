@@ -26,9 +26,9 @@ namespace InventoryManagementSystem.Infrastructure.Repositories
         }
 
 
-        public async Task<IEnumerable<T>> GetAllAsync()
+        public async Task<IEnumerable<T>> GetAllAsync(string[] includes = null)
         {
-            return await _context.Set<T>().ToListAsync();
+            return await HandleIncludes(_context.Set<T>(), includes).ToListAsync();
         }
 
         public async Task<T> GetByIdAsync(string id)
@@ -43,8 +43,8 @@ namespace InventoryManagementSystem.Infrastructure.Repositories
 
         public async Task<IEnumerable<T>> FindAllAsync(
             Expression<Func<T, bool>> expression, 
-            int? take , 
-            int? skip, 
+            int? take=null, 
+            int? skip=null, 
             Expression<Func<T, object>> orderBy=null,
             string orderDirection = null,
             string[] includes = null

@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 
-namespace InventoryManagementSystem.Infrastructure.Services
+namespace InventoryManagementSystem.Infrastructure.Services.AuthServices
 {
     public static class RoleClaimsService
     {
@@ -29,7 +29,7 @@ namespace InventoryManagementSystem.Infrastructure.Services
             {
                 if (!AllClaims.Any(c => c.Type == OtherConstants.Permissions.ToString() && c.Value == permission))
                 {
-                    await _rolesManager.AddClaimAsync(role,new Claim(OtherConstants.Permissions.ToString(), permission));
+                    await _rolesManager.AddClaimAsync(role, new Claim(OtherConstants.Permissions.ToString(), permission));
                 }
             }
         }

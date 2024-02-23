@@ -31,9 +31,10 @@ namespace InventoryManagementSystem.Domain.Constants
                 {$"{Roles.Admin}.{Modules.Order}",[Cruds.Read.ToString(), Cruds.Update.ToString(), Cruds.Create.ToString()] },
                 {$"{Roles.Admin}.{Modules.Inventory}",[Cruds.Read.ToString(), Cruds.Update.ToString(), Cruds.Create.ToString()] },
                 {$"{Roles.Admin}.{Modules.ProductsInventory}",[Cruds.Read.ToString(), Cruds.Update.ToString()] },
+                {$"{Roles.Admin}.{Modules.Brand}",[Cruds.Read.ToString(), Cruds.Update.ToString(), Cruds.Create.ToString()] },
 
 
-                // Basic
+                // Customer
                 {$"{Roles.Customer}.{Modules.Product}",[Cruds.Read.ToString()] },
                 {$"{Roles.Customer}.{Modules.Customer}",[Cruds.Read.ToString()] },
                 {$"{Roles.Customer}.{Modules.Supplier}",[Cruds.Read.ToString()] },
@@ -42,8 +43,9 @@ namespace InventoryManagementSystem.Domain.Constants
                 {$"{Roles.Customer}.{Modules.Order}",_CrudsArr },
                 {$"{Roles.Customer}.{Modules.Inventory}",[] },
                 {$"{Roles.Customer}.{Modules.ProductsInventory}",[] },
+                {$"{Roles.Customer}.{Modules.Brand}",[Cruds.Read.ToString()] },
 
-
+                // Supplier
                 {$"{Roles.Supplier}.{Modules.Product}",[Cruds.Read.ToString()]},
                 {$"{Roles.Supplier}.{Modules.Order}",_CrudsArr},
                 {$"{Roles.Supplier}.{Modules.Customer}",[Cruds.Read.ToString()] },
@@ -52,11 +54,12 @@ namespace InventoryManagementSystem.Domain.Constants
                 {$"{Roles.Supplier}.{Modules.Inventory}",[Cruds.Read.ToString()] },
                 {$"{Roles.Supplier}.{Modules.ProductItem}",_CrudsArr },
                 {$"{Roles.Supplier}.{Modules.Category}",[Cruds.Read.ToString()] },
+                {$"{Roles.Supplier}.{Modules.Brand}",[Cruds.Read.ToString()] },
 
             };
         }
 
-        /*private static RoleModules _lock = new();
+        private static RoleModules _lock = new();
         private static RoleModules _instance = new();
         public static RoleModules instance
         {
@@ -69,7 +72,7 @@ namespace InventoryManagementSystem.Domain.Constants
                     return _instance;
                 }
             }
-        }*/
+        }
 
         public string[] cruds(string roleName, string Module)
         {

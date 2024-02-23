@@ -10,17 +10,17 @@ using System.Security.Claims;
 using System.Text;
 using InventoryManagementSystem.Domain.Constants;
 
-namespace InventoryManagementSystem.Infrastructure.Services
+namespace InventoryManagementSystem.Infrastructure.Services.AuthServices
 {
     public class AuthService : IAuthService
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IRoleService _roleService;
         private readonly JWTSettings _jwt;
-        
+
 
         public AuthService(
-            UserManager<ApplicationUser> userManager, 
+            UserManager<ApplicationUser> userManager,
             IOptions<JWTSettings> jwt,
             IRoleService roleService
             )
@@ -32,7 +32,7 @@ namespace InventoryManagementSystem.Infrastructure.Services
 
         }
 
-        
+
 
         private async Task<JwtSecurityToken> CreateJWT(ApplicationUser user)
         {
@@ -44,7 +44,7 @@ namespace InventoryManagementSystem.Infrastructure.Services
             {
                 roleClaims.Add(new Claim("roles", role));
                 foreach (var claim in _roleService.GetRoleClaimsPermissions(role).Result)
-                    if(roleClaims.FirstOrDefault(i=>i.Value == claim) == null)
+                    if (roleClaims.FirstOrDefault(i => i.Value == claim) == null)
                         roleClaims.Add(new Claim(OtherConstants.Permissions.ToString(), claim));
             }
 
@@ -60,7 +60,7 @@ namespace InventoryManagementSystem.Infrastructure.Services
                 }
             .Union(userClaims)
             .Union(roleClaims);
-            
+
 
 
             SigningCredentials credentials = new SigningCredentials(
@@ -92,7 +92,7 @@ namespace InventoryManagementSystem.Infrastructure.Services
                 UserName = userDTO.Username,
             };
             var result = await _userManager.CreateAsync(user, userDTO.Password);
-            if (result.Succeeded)        
+            if (result.Succeeded)
                 return user;
             return null;
         }
@@ -118,7 +118,7 @@ namespace InventoryManagementSystem.Infrastructure.Services
 
             return new RegisterationResponse
             {
-                isAuthenticated = true,
+                IsSucceeded = true,
                 Message = "Account Created Successfully",
                 Token = new JwtSecurityTokenHandler().WriteToken(token),
                 UserEmail = userDTO.Email,
@@ -135,18 +135,18 @@ namespace InventoryManagementSystem.Infrastructure.Services
             else
                 user = await _userManager.FindByNameAsync(loginDTO.Username);
 
-            if (user == null || !(await _userManager.CheckPasswordAsync(user, loginDTO.Password)))
-                return new BaseResponse { isAuthenticated = false, Message = "User or Password is Invalid" };
+            if (user == null || !await _userManager.CheckPasswordAsync(user, loginDTO.Password))
+                return new BaseResponse { IsSucceeded = false, Message = "User or Password is Invalid" };
 
             JwtSecurityToken token = await CreateJWT(user);
             return new AuthResponse
             {
-                isAuthenticated = true,
+                IsSucceeded = true,
                 Message = user.UserName + " LoggedIn Successfully",
                 Token = new JwtSecurityTokenHandler().WriteToken(token)
             };
         }
 
-        
+
     }
 }

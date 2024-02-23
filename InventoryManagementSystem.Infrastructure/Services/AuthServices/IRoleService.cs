@@ -2,7 +2,7 @@
 using InventoryManagementSystem.Domain.DTOs.Response;
 using InventoryManagementSystem.Domain.Models;
 
-namespace InventoryManagementSystem.Infrastructure.Services
+namespace InventoryManagementSystem.Infrastructure.Services.AuthServices
 {
     public interface IRoleService
     {

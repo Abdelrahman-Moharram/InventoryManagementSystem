@@ -2,9 +2,10 @@ using BookStore.Seeds;
 using InventoryManagementSystem.Controllers;
 using InventoryManagementSystem.Domain.Models;
 using InventoryManagementSystem.Infrastructure.Data;
+using InventoryManagementSystem.Infrastructure.Mappers;
 using InventoryManagementSystem.Infrastructure.Repositories;
 using InventoryManagementSystem.Infrastructure.Seeds;
-using InventoryManagementSystem.Infrastructure.Services;
+using InventoryManagementSystem.Infrastructure.Services.AuthServices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -90,7 +91,8 @@ var logger = new LoggerConfiguration().ReadFrom.Configuration(builder.Configurat
 builder.Logging.AddSerilog(logger);
 
 // auto mapper
-builder.Services.AddAutoMapper(typeof(Program));
+builder.Services.AddAutoMapper(typeof(BrandProfile));
+builder.Services.AddAutoMapper(typeof(CategoryProfile));
 
 // ------------------------------------------------------- //
 

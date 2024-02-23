@@ -9,14 +9,14 @@ namespace InventoryManagementSystem.Infrastructure.Repositories
 {
     public interface IBaseRepository<T> where T : class
     {
-        Task<IEnumerable<T>> GetAllAsync();
+        Task<IEnumerable<T>> GetAllAsync(string[] includes = null);
         Task<T> GetByIdAsync(string id);
         Task<T> Find(Expression<Func<T, bool>> expression, string[] includes = null);
 
         Task<IEnumerable<T>> FindAllAsync(
             Expression<Func<T, bool>> expression,
-            int? take,
-            int? skip,
+            int? take=null,
+            int? skip= null,
             Expression<Func<T, object>> orderBy = null,
             string orderDirection = null,
             string[] includes = null

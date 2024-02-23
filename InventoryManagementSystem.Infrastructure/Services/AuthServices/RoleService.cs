@@ -9,9 +9,9 @@ using System.Security.Claims;
 using Microsoft.Extensions.Logging;
 using InventoryManagementSystem.Domain.Constants;
 
-namespace InventoryManagementSystem.Infrastructure.Services
+namespace InventoryManagementSystem.Infrastructure.Services.AuthServices
 {
-    public class RoleService:IRoleService
+    public class RoleService : IRoleService
     {
 
         private readonly RoleManager<IdentityRole> _roleManager;
@@ -52,7 +52,7 @@ namespace InventoryManagementSystem.Infrastructure.Services
 
             var result = await _roleManager.CreateAsync(new IdentityRole(roleName));
             if (result.Succeeded)
-                return new BaseResponse { Message = "Role Added Successfully !", isAuthenticated = true };
+                return new BaseResponse { Message = "Role Added Successfully !", IsSucceeded = true };
             _logger.LogError("Something went wrong Add Role");
             return new BaseResponse { Message = "something went wrong" };
         }
@@ -86,7 +86,7 @@ namespace InventoryManagementSystem.Infrastructure.Services
 
             var result = await _roleManager.DeleteAsync(role);
             if (result.Succeeded)
-                return new BaseResponse { Message = $"Role {roleName} Removed Successfully !", isAuthenticated = true };
+                return new BaseResponse { Message = $"Role {roleName} Removed Successfully !", IsSucceeded = true };
             _logger.LogError($"Something went wrong while Adding {roleName} Role");
             return new BaseResponse { Message = "something went wrong" };
         }
@@ -121,7 +121,7 @@ namespace InventoryManagementSystem.Infrastructure.Services
                 var result = await _userManager.RemoveFromRoleAsync(user, addRole.roleName);
                 if (result.Succeeded)
                 {
-                    return new BaseResponse { Message = $"{user.UserName} removed from {addRole.roleName} role Successfully !", isAuthenticated = true };
+                    return new BaseResponse { Message = $"{user.UserName} removed from {addRole.roleName} role Successfully !", IsSucceeded= true };
                 }
             }
             return new BaseResponse { Message = "Invalid user or Role" };
@@ -132,14 +132,14 @@ namespace InventoryManagementSystem.Infrastructure.Services
             var role = _roleManager.FindByIdAsync(roleNameOrRoleId).Result;
             if (role == null)
                 role = _roleManager.FindByNameAsync(roleNameOrRoleId).Result;
-            
+
             if (role == null)
                 return null;
 
             return _roleManager.GetClaimsAsync(role).Result.Where(i => i.Type == "Permission").Select(i => i.Value).ToList();
         }
 
-        
+
         public async Task<List<string>> EditRoleClaimsPermissions(RolePermissionsDTO permissionsDTO)
         {
             var role = _roleManager.FindByIdAsync(permissionsDTO.RoleId).Result;

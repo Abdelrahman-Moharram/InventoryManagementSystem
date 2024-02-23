@@ -17,6 +17,7 @@ namespace InventoryManagementSystem.Infrastructure.Repositories
         IBaseRepository<ProductsInventory> ProductsInventories { get; }
         IBaseRepository<ProductItem> ProductItems { get; }
         IBaseRepository<Order> Orders { get; }
+        IBaseRepository<Brand> Brands { get; }
 
         Task<int> Save();
     }

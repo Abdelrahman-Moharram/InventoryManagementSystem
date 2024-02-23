@@ -43,7 +43,7 @@ namespace InventoryManagementSystem.Infrastructure.Data
 
             new ProductItemConfigurations().Configure(builder.Entity<ProductItem>());
             new OrderConfigurations().Configure(builder.Entity<Order>());
-
+            new BrandsConfigurations().Configure(builder.Entity<Brand>());
 
 
 
@@ -61,6 +61,8 @@ namespace InventoryManagementSystem.Infrastructure.Data
         public DbSet<ProductItem> ProductItems { get; set; }
 
         public DbSet<Order> Orders { get; set; }
+        public DbSet<Brand> Brands { get; set; }
+        
 
     }
 }
