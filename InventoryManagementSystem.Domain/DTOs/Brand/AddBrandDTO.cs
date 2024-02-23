@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace InventoryManagementSystem.Domain.DTOs.Brand
 {
-    public class AddBrandDTO 
+    public class AddBrandDTO : BaseDTO
     {
         public string Name { get; set; }
     }

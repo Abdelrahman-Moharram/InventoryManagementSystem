@@ -1,4 +1,5 @@
-﻿using InventoryManagementSystem.Domain.Helpers;
+﻿using InventoryManagementSystem.Domain.Constants;
+using InventoryManagementSystem.Domain.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
 
@@ -26,7 +27,7 @@ namespace InventoryManagementSystem.Infrastructure.Filters
                     .Claims
                         .Any(
                             c =>
-                            c.Type == "Permission" &&
+                            c.Type == OtherConstants.Permissions.ToString() &&
                             c.Value == requirement.Permission &&
                             c.Issuer == _jwt.Issuer
                         );

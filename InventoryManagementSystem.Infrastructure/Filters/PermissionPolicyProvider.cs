@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using InventoryManagementSystem.Domain.Constants;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
@@ -28,7 +29,7 @@ namespace InventoryManagementSystem.Infrastructure.Filters
 
         public Task<AuthorizationPolicy?> GetPolicyAsync(string policyName)
         {
-            if (policyName.StartsWith("permission", StringComparison.OrdinalIgnoreCase))
+            if (policyName.StartsWith(OtherConstants.Permissions.ToString(), StringComparison.OrdinalIgnoreCase))
             {
                 var policy = new AuthorizationPolicyBuilder();
                 policy.AddRequirements(new PermissionRequirement(policyName));

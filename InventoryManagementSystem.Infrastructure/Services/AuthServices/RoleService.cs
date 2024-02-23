@@ -136,7 +136,7 @@ namespace InventoryManagementSystem.Infrastructure.Services.AuthServices
             if (role == null)
                 return null;
 
-            return _roleManager.GetClaimsAsync(role).Result.Where(i => i.Type == "Permission").Select(i => i.Value).ToList();
+            return _roleManager.GetClaimsAsync(role).Result.Where(i => i.Type == OtherConstants.Permissions.ToString()).Select(i => i.Value).ToList();
         }
 
 
@@ -153,10 +153,10 @@ namespace InventoryManagementSystem.Infrastructure.Services.AuthServices
                     permissionsDTO.Permissions.Remove(claim.Value);
             }
             foreach (var permission in permissionsDTO.Permissions)
-                await _roleManager.AddClaimAsync(role, new Claim("Permission", permission));
+                await _roleManager.AddClaimAsync(role, new Claim(OtherConstants.Permissions.ToString(), permission));
 
 
-            return _roleManager.GetClaimsAsync(role).Result.Where(i => i.Type == "Permission").Select(i => i.Value).ToList();
+            return _roleManager.GetClaimsAsync(role).Result.Where(i => i.Type == OtherConstants.Permissions.ToString()).Select(i => i.Value).ToList();
         }
 
         public async Task<List<string>> AllRoles()

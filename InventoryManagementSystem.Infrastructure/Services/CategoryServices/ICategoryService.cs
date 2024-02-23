@@ -11,7 +11,7 @@ namespace InventoryManagementSystem.Infrastructure.Services.CategoryServices
     public interface ICategoryService
     {
         Task<IEnumerable<GetCategoryDTO>> GetAll();
-        Task<IEnumerable<GetCategoryDTO>> GetAllWithBaseProducts();
+        Task<IEnumerable<GetCategoryDTO>> GetAllWithBaseIncludes();
         Task<GetCategoryDTO> GetById(string id);
         Task<IEnumerable<GetCategoryDTO>> Search(string SearchQuery);
 

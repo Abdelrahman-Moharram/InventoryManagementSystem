@@ -1,12 +1,18 @@
 using BookStore.Seeds;
 using InventoryManagementSystem.Controllers;
+using InventoryManagementSystem.Domain.Helpers;
 using InventoryManagementSystem.Domain.Models;
 using InventoryManagementSystem.Infrastructure.Data;
+using InventoryManagementSystem.Infrastructure.Filters;
 using InventoryManagementSystem.Infrastructure.Mappers;
 using InventoryManagementSystem.Infrastructure.Repositories;
 using InventoryManagementSystem.Infrastructure.Seeds;
 using InventoryManagementSystem.Infrastructure.Services.AuthServices;
+using InventoryManagementSystem.Infrastructure.Services.BrandServices;
+using InventoryManagementSystem.Infrastructure.Services.CategoryServices;
+using InventoryManagementSystem.Infrastructure.Services.Productservices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -25,17 +31,29 @@ builder.Services.AddSwaggerGen();
 // ______________________________ Sql Confs_________________________________//
 
 builder.Services.AddDbContext<ApplicationDbContext>(
-    options=>
-        options.UseSqlServer( builder.Configuration.GetConnectionString("DefaultConnection") )
+    options =>
+    {
+        options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+        options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+    }
     );
 // ______________________________ End Sql Conf_________________________________//
 
 
 // ______________________________ Dependancy Injections _________________________________//
-
+    builder.Services.Configure<JWTSettings>(builder.Configuration.GetSection("JWT"));
     builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
     builder.Services.AddScoped<IAuthService, AuthService>();
     builder.Services.AddScoped<IRoleService, RoleService>();
+
+    builder.Services.AddScoped<IProductservice, Productservice>();
+    builder.Services.AddScoped<IBrandService, BrandService>();
+    builder.Services.AddScoped<ICategoryService, CategoryService>();
+
+
+// Permissions
+builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
+    builder.Services.AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler>();
 // ______________________________ End Dependancy Injections _________________________________//
 
 

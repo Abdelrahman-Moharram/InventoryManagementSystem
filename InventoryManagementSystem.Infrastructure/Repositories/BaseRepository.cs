@@ -84,7 +84,7 @@ namespace InventoryManagementSystem.Infrastructure.Repositories
 
         public async Task<T> UpdateAsync(T entity)
         {
-            await Task.Run(()=> _context.Update(entity));
+            await Task.Run(() => _context.Set<T>().Update(entity));
             return entity;
         }
 

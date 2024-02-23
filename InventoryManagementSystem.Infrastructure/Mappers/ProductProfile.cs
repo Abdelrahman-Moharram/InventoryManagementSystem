@@ -10,13 +10,13 @@ namespace InventoryManagementSystem.Infrastructure.Mappers
         public ProductProfile()
         {
             CreateMap<Product, GetProductDTO>()
-                .ForMember(dest=>dest.Colors, 
-                    opt => opt.MapFrom(src=>src.ProductItems.Where(ii=>ii.ProductId == src.Id).Select(i=>i.Color).ToList()
-                    )
-                );
+                .ForMember(dest=>dest.Colors, opt => opt.MapFrom(src=>src.ProductItems.Where(ii=>ii.ProductId == src.Id).Select(i=>i.Color).ToList()))
+                .ForMember(dest => dest.Colors, opt => opt.MapFrom(src => src.Inventories.Select(i => i.ProductsInventory).ToList()))
+                .ForMember(dest => dest.Amount,opt => opt.MapFrom(src=>src.ProductItems.Count()))
+                .ForMember(dest => dest.CategoryName,opt => opt.MapFrom(src => src.Category.Name)); 
 
-            CreateMap<Product, AddProductDTO>().ReverseMap();
-            CreateMap<Product, UpdateProductDTO>().ReverseMap();
+            CreateMap<AddProductDTO, Product>().ReverseMap();
+            CreateMap<UpdateProductDTO, Product>().ReverseMap();
         }
     }
 }

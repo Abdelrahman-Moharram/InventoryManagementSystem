@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace InventoryManagementSystem.Domain.DTOs.Product
 {
-    public class AddProductDTO
+    public class AddProductDTO : BaseDTO
     {
         public string Name { get; set; }
         public string ModelName { get; set; }

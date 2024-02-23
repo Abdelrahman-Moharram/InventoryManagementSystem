@@ -14,18 +14,18 @@ namespace InventoryManagementSystem.Infrastructure.Services.Productservices
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly ILogger<Productservice> _logger;
+
         public Productservice(IUnitOfWork unitOfWork, IMapper mapper, ILogger<Productservice> logger)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _logger = logger;
         }
-
         public async Task<IEnumerable<GetProductDTO>> GetAll()
         {
             return _mapper.Map<IEnumerable<GetProductDTO>>(await _unitOfWork.Products.GetAllAsync());
         }
-        public async Task<IEnumerable<GetProductDTO>> GetAllWithBaseProducts()
+        public async Task<IEnumerable<GetProductDTO>> GetAllWithBaseIncludes()
         {
             return _mapper.Map<IEnumerable<GetProductDTO>>(await _unitOfWork.Products.GetAllAsync(new[] { "Products" }));
         }
@@ -37,7 +37,10 @@ namespace InventoryManagementSystem.Infrastructure.Services.Productservices
         {
             return _mapper.Map<IEnumerable<GetProductDTO>>(
                 await _unitOfWork.Products.FindAllAsync(
-                        i => i.Name.Contains(SearchQuery) || i.Id.Contains(SearchQuery)
+                        i => i.Name.Contains(SearchQuery) || 
+                        i.Id.Contains(SearchQuery) || 
+                        i.Category.Name.Contains(SearchQuery) ||
+                        i.ModelName == SearchQuery
                     ));
 
         }
@@ -46,11 +49,11 @@ namespace InventoryManagementSystem.Infrastructure.Services.Productservices
             if (newProductDTO.Name == null)
                 return new BaseResponse { Message = "Invalid Product Name", IsSucceeded = false };
 
-            else if (await _unitOfWork.Products.Find(i => i.Name == newProductDTO.Name) != null)
-                return new BaseResponse { Message = $"Product with {newProductDTO.Name} Name Already Exisits", IsSucceeded = false };
+            
             try
             {
                 await _unitOfWork.Products.AddAsync(_mapper.Map<Product>(newProductDTO));
+                await _unitOfWork.Save();
                 return new BaseResponse { Message = $"Product {newProductDTO.Name} added Successfully", IsSucceeded = true };
             }
             catch (Exception ex)
@@ -65,11 +68,12 @@ namespace InventoryManagementSystem.Infrastructure.Services.Productservices
             if (updateProductDTO.Name == null)
                 return new BaseResponse { Message = "Invalid Product Name", IsSucceeded = false };
 
-            else if (await _unitOfWork.Products.Find(i => i.Name == updateProductDTO.Name) == null)
-                return new BaseResponse { Message = $"Product with {updateProductDTO.Name} Name Doesn't Exisit", IsSucceeded = false };
+            else if (await _unitOfWork.Products.Find(i => i.Id == updateProductDTO.productId) == null)
+                return new BaseResponse { Message = $"Product Not Found", IsSucceeded = false };
             try
             {
                 await _unitOfWork.Products.UpdateAsync(_mapper.Map<Product>(updateProductDTO));
+                await _unitOfWork.Save();
                 return new BaseResponse { Message = $"Product {updateProductDTO.Name} Updated Successfully", IsSucceeded = true };
             }
             catch (Exception ex)
@@ -89,6 +93,7 @@ namespace InventoryManagementSystem.Infrastructure.Services.Productservices
             try
             {
                 await _unitOfWork.Products.DeleteAsync(Product);
+                await _unitOfWork.Save();
                 return new BaseResponse { Message = $"Product {Product.Name} Deleted Successfully", IsSucceeded = true };
             }
             catch (Exception ex)

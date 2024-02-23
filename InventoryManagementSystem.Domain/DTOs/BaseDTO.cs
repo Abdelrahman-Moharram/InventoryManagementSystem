@@ -4,14 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace InventoryManagementSystem.Domain.Models
+namespace InventoryManagementSystem.Domain.DTOs
 {
-    public class BaseEntity
+    public class BaseDTO
     {
-        public bool IsDeleted { get; set; } = false;
-
-        public DateTime CreatedAt { get; set; }
-
         public string? CreatedBy { get; set; }
     }
 }

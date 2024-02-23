@@ -11,7 +11,7 @@ namespace InventoryManagementSystem.Infrastructure.Services.BrandServices
     public interface IBrandService
     {
         Task<IEnumerable<GetBrandDTO>> GetAll();
-        Task<IEnumerable<GetBrandDTO>> GetAllWithBaseProducts();
+        Task<IEnumerable<GetBrandDTO>> GetAllWithBaseIncludes();
         Task<GetBrandDTO> GetById(string id);
         Task<IEnumerable<GetBrandDTO>> Search(string SearchQuery);
 

@@ -1,6 +1,7 @@
 ﻿using InventoryManagementSystem.Domain.DTOs.Account;
 using InventoryManagementSystem.Domain.DTOs.Response;
 using InventoryManagementSystem.Infrastructure.Services.AuthServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -8,6 +9,7 @@ namespace InventoryManagementSystem.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [AllowAnonymous]
     public class AccountsController : ControllerBase
     {
         private readonly IAuthService _authService;
