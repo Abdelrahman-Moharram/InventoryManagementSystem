@@ -25,22 +25,15 @@ namespace InventoryManagementSystem.Infrastructure.Services.Productservices
         {
             return _mapper.Map<IEnumerable<GetProductDTO>>(await _unitOfWork.Products.GetAllAsync());
         }
-        public async Task<IEnumerable<GetProductDTO>> GetAllWithBaseIncludes()
-        {
-            var prods = await _unitOfWork.Products.GetAllAsync(new[] { "Inventories", "ProductsInventory", "ProductItems", "Brand", "Category" });
-           
-            return _mapper.Map<IEnumerable<GetProductDTO>>
-                (
-                prods
+        public async Task<IEnumerable<GetProductDTO>> GetAllWithBaseIncludes() =>
+            _mapper.Map<IEnumerable<GetProductDTO>>(
+                await _unitOfWork.Products.GetAllAsync(new[] { "Inventories", "ProductsInventory", "ProductItems", "Brand", "Category" })
                 );
-        }
-        public async Task<GetProductDTO> GetById(string id)
-        {
-            return _mapper.Map<GetProductDTO>(await _unitOfWork.Products.GetByIdAsync(id));
-        }
-        public async Task<IEnumerable<GetProductDTO>> Search(string SearchQuery)
-        {
-            return _mapper.Map<IEnumerable<GetProductDTO>>(
+        public async Task<GetProductDTO> GetById(string id) => 
+            _mapper.Map<GetProductDTO>(await _unitOfWork.Products.GetByIdAsync(id));
+        
+        public async Task<IEnumerable<GetProductDTO>> Search(string SearchQuery) => 
+            _mapper.Map<IEnumerable<GetProductDTO>>(
                         await _unitOfWork.Products.FindAllAsync(
                             expression:
                                 i => i.Name.Contains(SearchQuery) || 
@@ -51,8 +44,7 @@ namespace InventoryManagementSystem.Infrastructure.Services.Productservices
                         includes: new[] { "Inventories", "ProductsInventories", "ProductItems" }
                     ));
 
-        }
-        public async Task<BaseResponse> AddNew(AddProductDTO newProductDTO)
+        public async Task<BaseResponse> AddNew(AddProductDTO newProductDTO, string CreatedBy)
         {
             if (newProductDTO.Name == null)
                 return new BaseResponse { Message = "Invalid Product Name", IsSucceeded = false };
@@ -60,7 +52,9 @@ namespace InventoryManagementSystem.Infrastructure.Services.Productservices
             
             try
             {
-                await _unitOfWork.Products.AddAsync(_mapper.Map<Product>(newProductDTO));
+                Product newProduct = _mapper.Map<Product>(newProductDTO);
+                newProduct.CreatedBy = CreatedBy;
+                await _unitOfWork.Products.AddAsync(newProduct);
                 await _unitOfWork.Save();
                 return new BaseResponse { Message = $"Product {newProductDTO.Name} added Successfully", IsSucceeded = true };
             }
@@ -71,7 +65,7 @@ namespace InventoryManagementSystem.Infrastructure.Services.Productservices
             }
 
         }
-        public async Task<BaseResponse> Update(UpdateProductDTO updateProductDTO)
+        public async Task<BaseResponse> Update(UpdateProductDTO updateProductDTO, string UpdatedBy)
         {
             if (updateProductDTO.Name == null)
                 return new BaseResponse { Message = "Invalid Product Name", IsSucceeded = false };
@@ -80,7 +74,10 @@ namespace InventoryManagementSystem.Infrastructure.Services.Productservices
                 return new BaseResponse { Message = $"Product Not Found", IsSucceeded = false };
             try
             {
-                await _unitOfWork.Products.UpdateAsync(_mapper.Map<Product>(updateProductDTO));
+
+                var entity = _mapper.Map<Product>(updateProductDTO);
+                entity.UpdatedBy = UpdatedBy;
+                await _unitOfWork.Products.UpdateAsync(entity);
                 await _unitOfWork.Save();
                 return new BaseResponse { Message = $"Product {updateProductDTO.Name} Updated Successfully", IsSucceeded = true };
             }
@@ -90,7 +87,7 @@ namespace InventoryManagementSystem.Infrastructure.Services.Productservices
                 return new BaseResponse { Message = $"Something went wrong while updating {updateProductDTO.Name}", IsSucceeded = false };
             }
         }
-        public async Task<BaseResponse> Delete(string id)
+        public async Task<BaseResponse> Delete(string id, string DeletedBy)
         {
             if (id == null)
                 return new BaseResponse { Message = "Invalid Product id", IsSucceeded = false };
@@ -100,6 +97,7 @@ namespace InventoryManagementSystem.Infrastructure.Services.Productservices
                 return new BaseResponse { Message = "this Product not found", IsSucceeded = false };
             try
             {
+                Product.DeletedBy = DeletedBy;
                 await _unitOfWork.Products.DeleteAsync(Product);
                 await _unitOfWork.Save();
                 return new BaseResponse { Message = $"Product {Product.Name} Deleted Successfully", IsSucceeded = true };

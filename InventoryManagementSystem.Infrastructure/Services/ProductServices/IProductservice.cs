@@ -9,9 +9,9 @@ namespace InventoryManagementSystem.Infrastructure.Services.Productservices
         Task<IEnumerable<GetProductDTO>> GetAllWithBaseIncludes();
         Task<GetProductDTO> GetById(string id);
         Task<IEnumerable<GetProductDTO>> Search(string SearchQuery);
-        Task<BaseResponse> AddNew(AddProductDTO newProductDTO);
-        Task<BaseResponse> Update(UpdateProductDTO updateProductDTO);
-        Task<BaseResponse> Delete(string id);
+        Task<BaseResponse> AddNew(AddProductDTO newProductDTO, string CreatedBy);
+        Task<BaseResponse> Update(UpdateProductDTO updateProductDTO, string UpdatedBy);
+        Task<BaseResponse> Delete(string id, string DeletedBy);
 
     }
 }

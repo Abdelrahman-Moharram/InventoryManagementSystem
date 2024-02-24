@@ -42,7 +42,7 @@ namespace InventoryManagementSystem.Infrastructure.Services.BrandServices
                     ));
 
         }
-        public async Task<BaseResponse> AddNew(AddBrandDTO newBrandDTO)
+        public async Task<BaseResponse> AddNew(AddBrandDTO newBrandDTO, string CreatedBy)
         {
             if (newBrandDTO.Name == null)
                 return new BaseResponse { Message = "Invalid Brand Name", IsSucceeded = false };
@@ -51,7 +51,9 @@ namespace InventoryManagementSystem.Infrastructure.Services.BrandServices
                 return new BaseResponse { Message = $"Brand with {newBrandDTO.Name} Name Already Exisits", IsSucceeded = false };
             try
             {
-                await _unitOfWork.Brands.AddAsync(_mapper.Map<Brand>(newBrandDTO));
+                Brand newBrand = _mapper.Map<Brand>(newBrandDTO);
+                newBrand.CreatedBy = CreatedBy;
+                await _unitOfWork.Brands.AddAsync(newBrand);
                 await _unitOfWork.Save();
                 return new BaseResponse { Message = $"Brand {newBrandDTO.Name} added Successfully", IsSucceeded = true };
             }
@@ -62,7 +64,7 @@ namespace InventoryManagementSystem.Infrastructure.Services.BrandServices
             }
 
         }
-        public async Task<BaseResponse> Update(UpdateBrandDTO updateBrandDTO)
+        public async Task<BaseResponse> Update(UpdateBrandDTO updateBrandDTO, string UpdatedBy)
         {
             if (updateBrandDTO.Name == null)
                 return new BaseResponse { Message = "Invalid Brand Name", IsSucceeded = false };
@@ -71,7 +73,9 @@ namespace InventoryManagementSystem.Infrastructure.Services.BrandServices
                 return new BaseResponse { Message = $"Brand  Doesn't Exisit", IsSucceeded = false };
             try
             {
-                await _unitOfWork.Brands.UpdateAsync(_mapper.Map<Brand>(updateBrandDTO));
+                var entity = _mapper.Map<Brand>(updateBrandDTO);
+                entity.UpdatedBy = UpdatedBy;
+                await _unitOfWork.Brands.UpdateAsync(entity);
                 await _unitOfWork.Save();
                 return new BaseResponse { Message = $"Brand {updateBrandDTO.Name} Updated Successfully", IsSucceeded = true };
             }
@@ -81,7 +85,7 @@ namespace InventoryManagementSystem.Infrastructure.Services.BrandServices
                 return new BaseResponse { Message = $"Something went wrong while updating {updateBrandDTO.Name}", IsSucceeded = false };
             }
         }
-        public async Task<BaseResponse> Delete(string id)
+        public async Task<BaseResponse> Delete(string id, string DeletedBy)
         {
             if (id == null)
                 return new BaseResponse { Message = "Invalid Brand id", IsSucceeded = false };
@@ -91,6 +95,7 @@ namespace InventoryManagementSystem.Infrastructure.Services.BrandServices
                 return new BaseResponse { Message = "this Brand not found", IsSucceeded = false };
             try
             {
+                Brand.DeletedBy = DeletedBy;
                 await _unitOfWork.Brands.DeleteAsync(Brand);
                 await _unitOfWork.Save();
                 return new BaseResponse { Message = $"Brand {Brand.Name} Deleted Successfully", IsSucceeded = true };

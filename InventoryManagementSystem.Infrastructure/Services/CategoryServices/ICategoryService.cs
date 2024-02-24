@@ -15,8 +15,8 @@ namespace InventoryManagementSystem.Infrastructure.Services.CategoryServices
         Task<GetCategoryDTO> GetById(string id);
         Task<IEnumerable<GetCategoryDTO>> Search(string SearchQuery);
 
-        Task<BaseResponse> AddNew(AddCategoryDTO newCategoryDTO);
-        Task<BaseResponse> Update(UpdateCategoryDTO updateCategoryDTO);
-        Task<BaseResponse> Delete(string id);
+        Task<BaseResponse> AddNew(AddCategoryDTO newCategoryDTO, string CreatedBy);
+        Task<BaseResponse> Update(UpdateCategoryDTO updateCategoryDTO, string UpdatedBy);
+        Task<BaseResponse> Delete(string id, string DeletedBy);
     }
 }

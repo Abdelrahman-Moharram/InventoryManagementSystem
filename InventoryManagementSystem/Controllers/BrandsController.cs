@@ -44,8 +44,7 @@ namespace InventoryManagementSystem.Controllers
         {
             if(ModelState.IsValid)
             {
-                brandDTO.CreatedBy = User.Claims.FirstOrDefault(i => i.Type == "userId")?.Value;
-                BaseResponse response =  await _brandService.AddNew(brandDTO);
+                BaseResponse response =  await _brandService.AddNew(brandDTO, User.Claims.FirstOrDefault(i => i.Type == "userId")?.Value);
                 if(response.IsSucceeded) 
                     return Ok(response.Message);
 
@@ -60,7 +59,7 @@ namespace InventoryManagementSystem.Controllers
         {
             if (ModelState.IsValid && brandDTO.Id == id)
             {
-                BaseResponse response = await _brandService.Update(brandDTO);
+                BaseResponse response = await _brandService.Update(brandDTO, User.Claims.FirstOrDefault(i => i.Type == "userId")?.Value);
                 if (response.IsSucceeded)
                     return Ok(response.Message);
 
@@ -75,7 +74,7 @@ namespace InventoryManagementSystem.Controllers
         {
             if (id != null)
             {
-                BaseResponse response = await _brandService.Delete(id);
+                BaseResponse response = await _brandService.Delete(id, User.Claims.FirstOrDefault(i => i.Type == "userId")?.Value);
 
                 if (response.IsSucceeded)
                     return Ok(response.Message);

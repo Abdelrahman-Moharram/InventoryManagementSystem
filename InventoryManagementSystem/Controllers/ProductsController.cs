@@ -41,8 +41,7 @@ namespace InventoryManagementSystem.Controllers
         {
             if (ModelState.IsValid)
             {
-                ProductDTO.CreatedBy = User.Claims.FirstOrDefault(i => i.Type == "userId")?.Value;
-                BaseResponse response = await _productService.AddNew(ProductDTO);
+                BaseResponse response = await _productService.AddNew(ProductDTO, User.Claims.FirstOrDefault(i => i.Type == "userId")?.Value);
                 if (response.IsSucceeded)
                     return Ok(response.Message);
 
@@ -57,7 +56,7 @@ namespace InventoryManagementSystem.Controllers
         {
             if (ModelState.IsValid && ProductDTO.Id == id)
             {
-                BaseResponse response = await _productService.Update(ProductDTO);
+                BaseResponse response = await _productService.Update(ProductDTO, User.Claims.FirstOrDefault(i => i.Type == "userId")?.Value);
                 if (response.IsSucceeded)
                     return Ok(response.Message);
 
@@ -72,7 +71,7 @@ namespace InventoryManagementSystem.Controllers
         {
             if (id != null)
             {
-                BaseResponse response = await _productService.Delete(id);
+                BaseResponse response = await _productService.Delete(id, User.Claims.FirstOrDefault(i => i.Type == "userId")?.Value);
 
                 if (response.IsSucceeded)
                     return Ok(response.Message);

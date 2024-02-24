@@ -15,8 +15,8 @@ namespace InventoryManagementSystem.Infrastructure.Services.BrandServices
         Task<GetBrandDTO> GetById(string id);
         Task<IEnumerable<GetBrandDTO>> Search(string SearchQuery);
 
-        Task<BaseResponse> AddNew(AddBrandDTO newBrandDTO);
-        Task<BaseResponse> Update(UpdateBrandDTO updateBrandDTO);
-        Task<BaseResponse> Delete(string id);
+        Task<BaseResponse> AddNew(AddBrandDTO newBrandDTO, string CreatedBy);
+        Task<BaseResponse> Update(UpdateBrandDTO updateBrandDTO, string UpdatedBy);
+        Task<BaseResponse> Delete(string id, string DeletedBy);
     }
 }

@@ -40,7 +40,7 @@ namespace InventoryManagementSystem.Infrastructure.Services.CategoryServices
                     ));
 
         }
-        public async Task<BaseResponse> AddNew(AddCategoryDTO newCategoryDTO)
+        public async Task<BaseResponse> AddNew(AddCategoryDTO newCategoryDTO, string CreatedBy)
         {
             if (newCategoryDTO.Name == null)
                 return new BaseResponse { Message = "Invalid Category Name" , IsSucceeded = false };
@@ -49,7 +49,9 @@ namespace InventoryManagementSystem.Infrastructure.Services.CategoryServices
                 return new BaseResponse { Message = $"Category with {newCategoryDTO.Name} Name Already Exisits", IsSucceeded = false };
             try
             {
-                await _unitOfWork.Categories.AddAsync(_mapper.Map<Category>(newCategoryDTO));
+                var newCategory = _mapper.Map<Category>(newCategoryDTO);
+                newCategory.CreatedBy = CreatedBy;
+                await _unitOfWork.Categories.AddAsync(newCategory);
                 await _unitOfWork.Save();
                 return new BaseResponse { Message = $"Category {newCategoryDTO.Name} added Successfully", IsSucceeded = true };
             }
@@ -60,7 +62,7 @@ namespace InventoryManagementSystem.Infrastructure.Services.CategoryServices
             }
 
         }
-        public async Task<BaseResponse> Update(UpdateCategoryDTO updateCategoryDTO)
+        public async Task<BaseResponse> Update(UpdateCategoryDTO updateCategoryDTO, string UpdatedBy)
         {
             if (updateCategoryDTO.Name == null)
                 return new BaseResponse { Message = "Invalid Category Name", IsSucceeded = false };
@@ -68,12 +70,14 @@ namespace InventoryManagementSystem.Infrastructure.Services.CategoryServices
             else if (await _unitOfWork.Categories.Find(i => i.Id == updateCategoryDTO.Id) == null)
                 return new BaseResponse { Message = $"Category Doesn't Exisit", IsSucceeded = false };
             
-            await _unitOfWork.Categories.UpdateAsync(_mapper.Map<Category>(updateCategoryDTO));
-            await _unitOfWork.Save();
-            return new BaseResponse { Message = $"Category {updateCategoryDTO.Name} Updated Successfully", IsSucceeded = true };
             
             try
             {
+                var entity = _mapper.Map<Category>(updateCategoryDTO);
+                entity.UpdatedBy = UpdatedBy;
+                await _unitOfWork.Categories.UpdateAsync(entity);
+                await _unitOfWork.Save();
+                return new BaseResponse { Message = $"Category {updateCategoryDTO.Name} Updated Successfully", IsSucceeded = true };
             }
             catch (Exception ex)
             {
@@ -81,7 +85,7 @@ namespace InventoryManagementSystem.Infrastructure.Services.CategoryServices
                 return new BaseResponse { Message = $"Something went wrong while updating {updateCategoryDTO.Name}", IsSucceeded = false };
             }
         }
-        public async Task<BaseResponse> Delete(string id)
+        public async Task<BaseResponse> Delete(string id, string DeletedBy)
         {
             if (id == null)
                 return new BaseResponse { Message = "Invalid Category id", IsSucceeded = false };
@@ -91,6 +95,7 @@ namespace InventoryManagementSystem.Infrastructure.Services.CategoryServices
                 return new BaseResponse { Message = "this Category not found", IsSucceeded = false };
             try
             {
+                category.DeletedBy = DeletedBy;
                 await _unitOfWork.Categories.DeleteAsync(category);
                 await _unitOfWork.Save();
                 return new BaseResponse { Message = $"Category {category.Name} Deleted Successfully", IsSucceeded = true };
