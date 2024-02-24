@@ -9,6 +9,7 @@ namespace InventoryManagementSystem.Infrastructure.Configurations
     {
         public void Configure(EntityTypeBuilder<Customer> builder)
         {
+
         }
     }
 }

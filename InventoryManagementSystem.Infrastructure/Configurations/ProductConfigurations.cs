@@ -29,7 +29,12 @@ namespace InventoryManagementSystem.Infrastructure.Configurations
                 .WithMany(ii=>ii.Products)
                 .HasForeignKey(i => i.CategoryId);
 
+            builder.HasOne(i => i.Brand)
+                .WithMany(ii => ii.Products)
+                .HasForeignKey(i => i.BrandId);
 
+            builder
+                .HasQueryFilter(i => !i.IsDeleted);
 
 
             builder
@@ -58,6 +63,9 @@ namespace InventoryManagementSystem.Infrastructure.Configurations
                         j
                         .Property(i => i.CreatedAt)
                         .HasDefaultValueSql("GetDate()");
+
+                        j
+                        .HasQueryFilter(i => !i.IsDeleted);
 
                     }
                 );

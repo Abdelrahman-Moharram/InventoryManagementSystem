@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 
 namespace InventoryManagementSystem.Infrastructure.Repositories
 {
-    public class BaseRepository<T> : IBaseRepository<T> where T : class
+    public class BaseRepository<T> : IBaseRepository<T> where T : BaseEntity
     {
         private ApplicationDbContext _context { get; }
 
@@ -90,7 +90,8 @@ namespace InventoryManagementSystem.Infrastructure.Repositories
 
         public async Task<T> DeleteAsync(T entity)
         {
-            await Task.Run(() => _context.Set<T>().Remove(entity));
+            entity.IsDeleted = true;
+            await Task.Run(() => _context.Set<T>().Update(entity));
             return entity;
         }
 

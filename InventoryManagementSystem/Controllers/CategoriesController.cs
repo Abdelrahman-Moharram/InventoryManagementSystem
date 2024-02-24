@@ -1,15 +1,9 @@
 ﻿using AutoMapper;
 using InventoryManagementSystem.Domain.DTOs.Category;
-using InventoryManagementSystem.Domain.DTOs.Category;
-using InventoryManagementSystem.Domain.DTOs.Product;
 using InventoryManagementSystem.Domain.DTOs.Response;
-using InventoryManagementSystem.Domain.Models;
-using InventoryManagementSystem.Infrastructure.Repositories;
 using InventoryManagementSystem.Infrastructure.Services.CategoryServices;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 
 namespace InventoryManagementSystem.Controllers
 {
@@ -18,10 +12,8 @@ namespace InventoryManagementSystem.Controllers
     public class CategoriesController : ControllerBase
     {
         private readonly ICategoryService _categoryService;
-        private readonly IMapper _mapper;
         public CategoriesController(IMapper mapper, ICategoryService CategoryService)
         {
-            _mapper = mapper;
             _categoryService = CategoryService;
         }
 

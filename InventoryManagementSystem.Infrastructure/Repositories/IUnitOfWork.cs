@@ -9,8 +9,6 @@ namespace InventoryManagementSystem.Infrastructure.Repositories
 {
     public interface IUnitOfWork : IDisposable
     {
-        IBaseRepository<Customer> Customers { get; }
-        IBaseRepository<Supplier> Suppliers { get; }
         IBaseRepository<Inventory> Inventories { get; }
         IBaseRepository<Category> Categories { get; }
         IProductRepository Products { get; }

@@ -8,6 +8,6 @@ namespace InventoryManagementSystem.Domain.DTOs.Product
 {
     public class UpdateProductDTO : AddProductDTO
     {
-        public string productId {  get; set; }
+        public string Id {  get; set; }
     }
 }

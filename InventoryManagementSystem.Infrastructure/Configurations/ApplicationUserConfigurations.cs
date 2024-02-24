@@ -17,6 +17,8 @@ namespace InventoryManagementSystem.Infrastructure.Configurations
             builder.Property(i => i.Wallet)
                    .HasDefaultValue(0)
                    .HasColumnType("money");
+            builder
+                .HasQueryFilter(i => !i.IsDeleted);
         }
     }
 }

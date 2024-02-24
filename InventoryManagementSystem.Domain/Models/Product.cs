@@ -10,6 +10,8 @@
         public  string CategoryId { get; set; }
         public Category Category { get; set; }
 
+        public string BrandId { get; set; }
+        public Brand Brand { get; set; }
         public IEnumerable<Inventory> Inventories { get; set; }
 
         public IEnumerable<ProductsInventory> ProductsInventory { get; set; }

@@ -46,7 +46,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(
     builder.Services.AddScoped<IAuthService, AuthService>();
     builder.Services.AddScoped<IRoleService, RoleService>();
 
-    builder.Services.AddScoped<IProductservice, Productservice>();
+    builder.Services.AddScoped<IProductService, Productservice>();
     builder.Services.AddScoped<IBrandService, BrandService>();
     builder.Services.AddScoped<ICategoryService, CategoryService>();
 

@@ -15,6 +15,9 @@ namespace InventoryManagementSystem.Infrastructure.Configurations
             builder
                 .Property(i => i.CreatedAt)
                 .HasDefaultValueSql("GetDate()");
+
+            builder
+                .HasQueryFilter(i => !i.IsDeleted);
         }
     }
 }

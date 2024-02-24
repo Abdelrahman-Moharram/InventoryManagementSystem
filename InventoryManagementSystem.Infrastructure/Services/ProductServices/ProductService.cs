@@ -9,7 +9,7 @@ using Microsoft.Extensions.Logging;
 
 namespace InventoryManagementSystem.Infrastructure.Services.Productservices
 {
-    public class Productservice : IProductservice
+    public class Productservice : IProductService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
@@ -27,7 +27,12 @@ namespace InventoryManagementSystem.Infrastructure.Services.Productservices
         }
         public async Task<IEnumerable<GetProductDTO>> GetAllWithBaseIncludes()
         {
-            return _mapper.Map<IEnumerable<GetProductDTO>>(await _unitOfWork.Products.GetAllAsync(new[] { "Products" }));
+            var prods = await _unitOfWork.Products.GetAllAsync(new[] { "Inventories", "ProductsInventory", "ProductItems", "Brand", "Category" });
+           
+            return _mapper.Map<IEnumerable<GetProductDTO>>
+                (
+                prods
+                );
         }
         public async Task<GetProductDTO> GetById(string id)
         {
@@ -36,11 +41,14 @@ namespace InventoryManagementSystem.Infrastructure.Services.Productservices
         public async Task<IEnumerable<GetProductDTO>> Search(string SearchQuery)
         {
             return _mapper.Map<IEnumerable<GetProductDTO>>(
-                await _unitOfWork.Products.FindAllAsync(
-                        i => i.Name.Contains(SearchQuery) || 
-                        i.Id.Contains(SearchQuery) || 
-                        i.Category.Name.Contains(SearchQuery) ||
-                        i.ModelName == SearchQuery
+                        await _unitOfWork.Products.FindAllAsync(
+                            expression:
+                                i => i.Name.Contains(SearchQuery) || 
+                                i.Id.Contains(SearchQuery) || 
+                                i.Category.Name.Contains(SearchQuery) ||
+                                i.ModelName == SearchQuery,
+
+                        includes: new[] { "Inventories", "ProductsInventories", "ProductItems" }
                     ));
 
         }
@@ -68,7 +76,7 @@ namespace InventoryManagementSystem.Infrastructure.Services.Productservices
             if (updateProductDTO.Name == null)
                 return new BaseResponse { Message = "Invalid Product Name", IsSucceeded = false };
 
-            else if (await _unitOfWork.Products.Find(i => i.Id == updateProductDTO.productId) == null)
+            else if (await _unitOfWork.Products.Find(i => i.Id == updateProductDTO.Id) == null)
                 return new BaseResponse { Message = $"Product Not Found", IsSucceeded = false };
             try
             {

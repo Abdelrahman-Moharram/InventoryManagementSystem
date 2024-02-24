@@ -14,5 +14,6 @@ namespace InventoryManagementSystem.Domain.DTOs.Product
         public decimal Price { get; set; }
 
         public string CategoryId { get; set; }
+        public string BrandId { get; set; }
     }
 }

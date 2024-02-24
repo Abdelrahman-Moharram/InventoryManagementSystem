@@ -11,8 +11,7 @@ namespace InventoryManagementSystem.Infrastructure.Repositories
     public class UnitOfWork : IUnitOfWork
     {
         private readonly ApplicationDbContext _context;
-        public IBaseRepository<Customer> Customers { get; private set; }
-        public IBaseRepository<Supplier> Suppliers { get; private set;}
+
         public IBaseRepository<Inventory> Inventories { get; private set;}
         public IBaseRepository<Category> Categories { get; private set;}
         public IProductRepository Products { get; private set;}
@@ -24,9 +23,8 @@ namespace InventoryManagementSystem.Infrastructure.Repositories
 
         public UnitOfWork(ApplicationDbContext context)
         {
-            _context = context;
-            Customers               = new BaseRepository<Customer>(_context);
-            Suppliers               = new BaseRepository<Supplier>(_context);
+            _context                = context;
+
             Inventories             = new BaseRepository<Inventory>(_context);
             Categories              = new BaseRepository<Category>(_context);
             Products                = new ProductRepository(_context);

@@ -43,6 +43,9 @@ namespace InventoryManagementSystem.Infrastructure.Configurations
                 .HasForeignKey(i=>i.OrderId)
                 .OnDelete(DeleteBehavior.NoAction);
 
+            builder
+                .HasQueryFilter(i => !i.IsDeleted);
+
         }
     }
 }
