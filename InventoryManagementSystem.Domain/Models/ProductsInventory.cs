@@ -9,7 +9,7 @@ namespace InventoryManagementSystem.Domain.Models
         public string InventoryId { get; set; }
         public Inventory Inventory { get; set; }
 
-        public virtual IEnumerable<ProductItem> ProductItems { get; set; }
-        public int Amount { get; set; }
+        public IEnumerable<ProductItem>? ProductItems { get; set; }
+        public int Amount { get; set; } = 0;
     }
 }

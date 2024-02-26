@@ -16,8 +16,9 @@ namespace InventoryManagementSystem.Infrastructure.Configurations
             builder
                 .Property(i => i.CreatedAt)
                 .HasDefaultValueSql("GetDate()");
+
             builder.HasKey(
-                i => new { i.ProductId, i.InventoryId });
+                i => i.SerialNo);
 
             builder
                 .HasOne(i => i.Inventory)

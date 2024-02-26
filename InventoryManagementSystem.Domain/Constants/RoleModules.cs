@@ -36,23 +36,23 @@ namespace InventoryManagementSystem.Domain.Constants
 
                 // Customer
                 {$"{Roles.Customer}.{Modules.Product}",[Cruds.Read.ToString()] },
-                {$"{Roles.Customer}.{Modules.Customer}",[Cruds.Read.ToString()] },
                 {$"{Roles.Customer}.{Modules.Supplier}",[Cruds.Read.ToString()] },
                 {$"{Roles.Customer}.{Modules.ProductItem}",[Cruds.Read.ToString()] },
                 {$"{Roles.Customer}.{Modules.Category}",[Cruds.Read.ToString()] },
-                {$"{Roles.Customer}.{Modules.Order}",_CrudsArr },
                 {$"{Roles.Customer}.{Modules.Inventory}",[] },
                 {$"{Roles.Customer}.{Modules.ProductsInventory}",[] },
                 {$"{Roles.Customer}.{Modules.Brand}",[Cruds.Read.ToString()] },
+                {$"{Roles.Customer}.{Modules.Customer}",_CrudsArr},
+                {$"{Roles.Customer}.{Modules.Order}",_CrudsArr },
 
                 // Supplier
-                {$"{Roles.Supplier}.{Modules.Product}",[Cruds.Read.ToString()]},
-                {$"{Roles.Supplier}.{Modules.Order}",_CrudsArr},
+                {$"{Roles.Supplier}.{Modules.Product}",[Cruds.Read.ToString(), Cruds.Update.ToString(), Cruds.Create.ToString()]},
+                {$"{Roles.Supplier}.{Modules.Supplier}", _CrudsArr},
+                {$"{Roles.Supplier}.{Modules.ProductsInventory}",[Cruds.Read.ToString(), Cruds.Update.ToString(), Cruds.Create.ToString()] },
+                {$"{Roles.Supplier}.{Modules.ProductItem}",_CrudsArr},
+                {$"{Roles.Supplier}.{Modules.Order}",[]},
                 {$"{Roles.Supplier}.{Modules.Customer}",[Cruds.Read.ToString()] },
-                {$"{Roles.Supplier}.{Modules.Supplier}",[Cruds.Read.ToString()] },
-                {$"{Roles.Supplier}.{Modules.ProductsInventory}",[Cruds.Read.ToString()] },
                 {$"{Roles.Supplier}.{Modules.Inventory}",[Cruds.Read.ToString()] },
-                {$"{Roles.Supplier}.{Modules.ProductItem}",_CrudsArr },
                 {$"{Roles.Supplier}.{Modules.Category}",[Cruds.Read.ToString()] },
                 {$"{Roles.Supplier}.{Modules.Brand}",[Cruds.Read.ToString()] },
 

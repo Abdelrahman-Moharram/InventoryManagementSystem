@@ -12,10 +12,10 @@
 
         public string BrandId { get; set; }
         public Brand Brand { get; set; }
-        public IEnumerable<Inventory> Inventories { get; set; }
+        public IEnumerable<Inventory>? Inventories { get; set; }
 
-        public IEnumerable<ProductsInventory> ProductsInventory { get; set; }
-        public virtual IEnumerable<ProductItem>? ProductItems { get; set; }
+        public IEnumerable<ProductsInventory>? ProductsInventory { get; set; }
+        public IEnumerable<ProductItem>? ProductItems { get; set; }
 
 
     }

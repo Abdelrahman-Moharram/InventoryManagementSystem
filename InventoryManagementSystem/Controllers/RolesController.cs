@@ -64,11 +64,11 @@ namespace InventoryManagementSystem.Controllers
 
 
         // Get Role Permissions
-        [Authorize(Roles = "SuperAdmin, Admin")]
-        [HttpGet("{roleId}/Permissions")]
-        public async Task<IActionResult> GetRolePermissions(string roleId)
+        [Authorize(Roles = "SuperAdmin")]
+        [HttpGet("{id}/Permissions")]
+        public async Task<IActionResult> GetRolePermissions(string id)
         {
-            var Claims = await _roleService.GetRoleClaimsPermissions(roleId);
+            var Claims = await _roleService.GetRoleClaimsPermissions(id);
             if (Claims == null)
                 return NotFound("Role not found !");
             return Ok(Claims);

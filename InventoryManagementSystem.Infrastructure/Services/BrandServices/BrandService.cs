@@ -3,7 +3,6 @@ using InventoryManagementSystem.Domain.DTOs.Brand;
 using InventoryManagementSystem.Domain.DTOs.Response;
 using InventoryManagementSystem.Domain.Models;
 using InventoryManagementSystem.Infrastructure.Repositories;
-using InventoryManagementSystem.Infrastructure.Services.BrandServices;
 using Microsoft.Extensions.Logging;
 
 
@@ -44,6 +43,8 @@ namespace InventoryManagementSystem.Infrastructure.Services.BrandServices
         }
         public async Task<BaseResponse> AddNew(AddBrandDTO newBrandDTO, string CreatedBy)
         {
+            if (string.IsNullOrEmpty(CreatedBy))
+                return new BaseResponse { Message = "Can't assign Transacation To user, user id is empty", IsSucceeded = false };
             if (newBrandDTO.Name == null)
                 return new BaseResponse { Message = "Invalid Brand Name", IsSucceeded = false };
 
@@ -66,6 +67,8 @@ namespace InventoryManagementSystem.Infrastructure.Services.BrandServices
         }
         public async Task<BaseResponse> Update(UpdateBrandDTO updateBrandDTO, string UpdatedBy)
         {
+            if (string.IsNullOrEmpty(UpdatedBy))
+                return new BaseResponse { Message = "Can't assign Transacation To user, user id is empty", IsSucceeded = false };
             if (updateBrandDTO.Name == null)
                 return new BaseResponse { Message = "Invalid Brand Name", IsSucceeded = false };
 
@@ -87,6 +90,8 @@ namespace InventoryManagementSystem.Infrastructure.Services.BrandServices
         }
         public async Task<BaseResponse> Delete(string id, string DeletedBy)
         {
+            if (string.IsNullOrEmpty(DeletedBy))
+                return new BaseResponse { Message = "Can't assign Transacation To user, user id is empty", IsSucceeded = false };
             if (id == null)
                 return new BaseResponse { Message = "Invalid Brand id", IsSucceeded = false };
 

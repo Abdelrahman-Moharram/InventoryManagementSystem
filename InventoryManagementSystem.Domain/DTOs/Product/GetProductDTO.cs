@@ -13,9 +13,9 @@ namespace InventoryManagementSystem.Domain.DTOs.Product
         public string CategoryName { get; set; }
         public string BrandName { get; set; }
 
-        public IEnumerable<SimpleModule> ProductsInventory { get; set; }
-        public IEnumerable<ProductItem>? ProductItems { get; set; }
+        public List<SimpleModule> ProductsInventory { get; set; }
+        public List<ProductItem>? ProductItems { get; set; }
 
-        public IEnumerable<string> Colors { get; set; }
+        public List<string> Colors { get; set; }
     }
 }

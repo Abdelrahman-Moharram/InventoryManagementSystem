@@ -8,6 +8,7 @@ using Microsoft.Extensions.Options;
 using System.Security.Claims;
 using Microsoft.Extensions.Logging;
 using InventoryManagementSystem.Domain.Constants;
+using InventoryManagementSystem.Domain.DTOs;
 
 namespace InventoryManagementSystem.Infrastructure.Services.AuthServices
 {
@@ -159,9 +160,9 @@ namespace InventoryManagementSystem.Infrastructure.Services.AuthServices
             return _roleManager.GetClaimsAsync(role).Result.Where(i => i.Type == OtherConstants.Permissions.ToString()).Select(i => i.Value).ToList();
         }
 
-        public async Task<List<string>> AllRoles()
+        public async Task<List<SimpleModule>> AllRoles()
         {
-            return await _roleManager.Roles.Select(i => i.Name).ToListAsync();
+            return await _roleManager.Roles.Select(i => new SimpleModule{ Name=i.Name, Id=i.Id }).ToListAsync();
         }
 
     }

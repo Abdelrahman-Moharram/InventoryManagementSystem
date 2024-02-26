@@ -1,4 +1,5 @@
-﻿using InventoryManagementSystem.Domain.DTOs.Account;
+﻿using InventoryManagementSystem.Domain.DTOs;
+using InventoryManagementSystem.Domain.DTOs.Account;
 using InventoryManagementSystem.Domain.DTOs.Response;
 using InventoryManagementSystem.Domain.Models;
 
@@ -18,7 +19,7 @@ namespace InventoryManagementSystem.Infrastructure.Services.AuthServices
         Task<BaseResponse> RemoveRole(string roleName);
 
         Task<List<string>> GetRoleClaimsPermissions(string roleId);
-        Task<List<string>> AllRoles();
+        Task<List<SimpleModule>> AllRoles();
         Task<List<string>> EditRoleClaimsPermissions(RolePermissionsDTO permissionsDTO);
     }
 }

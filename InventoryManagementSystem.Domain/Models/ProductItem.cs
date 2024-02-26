@@ -20,6 +20,7 @@ namespace InventoryManagementSystem.Domain.Models
         public string? OrderId { get; set; }
         public Order? Order { get; set; }
 
+        public bool IsSelled { get; set; } = false;
         public string Color { get; set; }
         public string SerialNo { get; set; }
     }

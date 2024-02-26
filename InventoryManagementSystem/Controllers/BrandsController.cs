@@ -24,22 +24,22 @@ namespace InventoryManagementSystem.Controllers
 
 
         [HttpGet("")]
-        [Authorize(Policy = "Permissions.Read.Category")]
+        [Authorize(Policy = "Permissions.Read.Brand")]
         public async Task<IActionResult> Index() => Ok(await _brandService.GetAll());
 
 
         [HttpGet("all/")]
-        [Authorize(Policy = "Permissions.Read.Category")]
+        [Authorize(Policy = "Permissions.Read.Brand")]
         public async Task<IActionResult> ListBrandsWithProducts() => Ok(await _brandService.GetAllWithBaseIncludes());
 
 
         [HttpGet("{id}")]
-        [Authorize(Policy = "Permissions.Read.Category")]
+        [Authorize(Policy = "Permissions.Read.Brand")]
         public async Task<IActionResult> Details(string id) => Ok(await _brandService.GetById(id));
 
 
         [HttpPost("add")]
-        [Authorize(Policy = "Permissions.Create.Category")]
+        [Authorize(Policy = "Permissions.Create.Brand")]
         public async Task<IActionResult> Add([FromBody] AddBrandDTO brandDTO)
         {
             if(ModelState.IsValid)
@@ -54,7 +54,7 @@ namespace InventoryManagementSystem.Controllers
         }
 
         [HttpPost("Edit/{id}")]
-        [Authorize(Policy = "Permissions.Update.Category")]
+        [Authorize(Policy = "Permissions.Update.Brand")]
         public async Task<IActionResult> Update([FromBody] UpdateBrandDTO brandDTO, string id)
         {
             if (ModelState.IsValid && brandDTO.Id == id)
@@ -69,7 +69,7 @@ namespace InventoryManagementSystem.Controllers
         }
 
         [HttpPost("Delete/{id}")]
-        [Authorize(Policy = "Permissions.Delete.Category")]
+        [Authorize(Policy = "Permissions.Delete.Brand")]
         public async Task<IActionResult> Delete(string id)
         {
             if (id != null)

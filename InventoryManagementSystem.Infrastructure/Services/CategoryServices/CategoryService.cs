@@ -42,6 +42,8 @@ namespace InventoryManagementSystem.Infrastructure.Services.CategoryServices
         }
         public async Task<BaseResponse> AddNew(AddCategoryDTO newCategoryDTO, string CreatedBy)
         {
+            if (string.IsNullOrEmpty(CreatedBy))
+                return new BaseResponse { Message = "Can't assign Transacation To user, user id is empty", IsSucceeded = false };
             if (newCategoryDTO.Name == null)
                 return new BaseResponse { Message = "Invalid Category Name" , IsSucceeded = false };
 
@@ -64,6 +66,8 @@ namespace InventoryManagementSystem.Infrastructure.Services.CategoryServices
         }
         public async Task<BaseResponse> Update(UpdateCategoryDTO updateCategoryDTO, string UpdatedBy)
         {
+            if (string.IsNullOrEmpty(UpdatedBy))
+                return new BaseResponse { Message = "Can't assign Transacation To user, user id is empty", IsSucceeded = false };
             if (updateCategoryDTO.Name == null)
                 return new BaseResponse { Message = "Invalid Category Name", IsSucceeded = false };
 
@@ -87,6 +91,8 @@ namespace InventoryManagementSystem.Infrastructure.Services.CategoryServices
         }
         public async Task<BaseResponse> Delete(string id, string DeletedBy)
         {
+            if (string.IsNullOrEmpty(DeletedBy))
+                return new BaseResponse { Message = "Can't assign Transacation To user, user id is empty", IsSucceeded = false };
             if (id == null)
                 return new BaseResponse { Message = "Invalid Category id", IsSucceeded = false };
 

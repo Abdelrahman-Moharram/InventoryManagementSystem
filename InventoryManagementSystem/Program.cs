@@ -10,6 +10,7 @@ using InventoryManagementSystem.Infrastructure.Seeds;
 using InventoryManagementSystem.Infrastructure.Services.AuthServices;
 using InventoryManagementSystem.Infrastructure.Services.BrandServices;
 using InventoryManagementSystem.Infrastructure.Services.CategoryServices;
+using InventoryManagementSystem.Infrastructure.Services.InventoryServices;
 using InventoryManagementSystem.Infrastructure.Services.Productservices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -49,6 +50,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(
     builder.Services.AddScoped<IProductService, Productservice>();
     builder.Services.AddScoped<IBrandService, BrandService>();
     builder.Services.AddScoped<ICategoryService, CategoryService>();
+    builder.Services.AddScoped<IInventoryService, InventoryService>();
 
 
 // Permissions
