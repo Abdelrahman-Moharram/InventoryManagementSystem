@@ -36,8 +36,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(
     {
         options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
         options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-    }
-    );
+    });
 // ______________________________ End Sql Conf_________________________________//
 
 
@@ -54,7 +53,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(
 
 
 // Permissions
-builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
+    builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
     builder.Services.AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler>();
 // ______________________________ End Dependancy Injections _________________________________//
 
@@ -113,6 +112,11 @@ builder.Logging.AddSerilog(logger);
 // auto mapper
 builder.Services.AddAutoMapper(typeof(BrandProfile));
 builder.Services.AddAutoMapper(typeof(CategoryProfile));
+
+builder.Services.AddAutoMapper(typeof(InventoryProfile));
+builder.Services.AddAutoMapper(typeof(ProductProfile));
+builder.Services.AddAutoMapper(typeof(ProductItemProfile));
+builder.Services.AddAutoMapper(typeof(ProductsInventoryProfile));
 
 // ------------------------------------------------------- //
 
