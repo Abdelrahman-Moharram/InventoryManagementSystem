@@ -40,53 +40,51 @@ namespace InventoryManagementSystem.Infrastructure.Services.CategoryServices
                     ));
 
         }
-        public async Task<BaseResponse> AddNew(AddCategoryDTO newCategoryDTO, string CreatedBy)
+        public async Task<BaseResponse> AddNew(Category newCategory, string CreatedBy)
         {
             if (string.IsNullOrEmpty(CreatedBy))
                 return new BaseResponse { Message = "Can't assign Transacation To user, user id is empty", IsSucceeded = false };
-            if (newCategoryDTO.Name == null)
+            if (newCategory.Name == null)
                 return new BaseResponse { Message = "Invalid Category Name" , IsSucceeded = false };
 
-            else if (await _unitOfWork.Categories.Find(i=>i.Name == newCategoryDTO.Name) != null)
-                return new BaseResponse { Message = $"Category with {newCategoryDTO.Name} Name Already Exisits", IsSucceeded = false };
+            else if (await _unitOfWork.Categories.Find(i=>i.Name == newCategory.Name) != null)
+                return new BaseResponse { Message = $"Category with {newCategory.Name} Name Already Exisits", IsSucceeded = false };
             try
             {
-                var newCategory = _mapper.Map<Category>(newCategoryDTO);
                 newCategory.CreatedBy = CreatedBy;
                 await _unitOfWork.Categories.AddAsync(newCategory);
                 await _unitOfWork.Save();
-                return new BaseResponse { Message = $"Category {newCategoryDTO.Name} added Successfully", IsSucceeded = true };
+                return new BaseResponse { Message = $"Category {newCategory.Name} added Successfully", IsSucceeded = true };
             }
             catch(Exception ex)
             {
-                _logger.LogError($"Something went wrong while adding {newCategoryDTO.Name}", ex);
-                return new BaseResponse { Message = $"Something went wrong while adding {newCategoryDTO.Name}", IsSucceeded = false };
+                _logger.LogError($"Something went wrong while adding {newCategory.Name}", ex);
+                return new BaseResponse { Message = $"Something went wrong while adding {newCategory.Name}", IsSucceeded = false };
             }
 
         }
-        public async Task<BaseResponse> Update(UpdateCategoryDTO updateCategoryDTO, string UpdatedBy)
+        public async Task<BaseResponse> Update(Category updateCategory, string UpdatedBy)
         {
             if (string.IsNullOrEmpty(UpdatedBy))
                 return new BaseResponse { Message = "Can't assign Transacation To user, user id is empty", IsSucceeded = false };
-            if (updateCategoryDTO.Name == null)
+            if (updateCategory.Name == null)
                 return new BaseResponse { Message = "Invalid Category Name", IsSucceeded = false };
 
-            else if (await _unitOfWork.Categories.Find(i => i.Id == updateCategoryDTO.Id) == null)
+            else if (await _unitOfWork.Categories.Find(i => i.Id == updateCategory.Id) == null)
                 return new BaseResponse { Message = $"Category Doesn't Exisit", IsSucceeded = false };
             
             
             try
             {
-                var entity = _mapper.Map<Category>(updateCategoryDTO);
-                entity.UpdatedBy = UpdatedBy;
-                await _unitOfWork.Categories.UpdateAsync(entity);
+                updateCategory.UpdatedBy = UpdatedBy;
+                await _unitOfWork.Categories.UpdateAsync(updateCategory);
                 await _unitOfWork.Save();
-                return new BaseResponse { Message = $"Category {updateCategoryDTO.Name} Updated Successfully", IsSucceeded = true };
+                return new BaseResponse { Message = $"Category {updateCategory.Name} Updated Successfully", IsSucceeded = true };
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Something went wrong while updating {updateCategoryDTO.Name}", ex);
-                return new BaseResponse { Message = $"Something went wrong while updating {updateCategoryDTO.Name}", IsSucceeded = false };
+                _logger.LogError($"Something went wrong while updating {updateCategory.Name}", ex);
+                return new BaseResponse { Message = $"Something went wrong while updating {updateCategory.Name}", IsSucceeded = false };
             }
         }
         public async Task<BaseResponse> Delete(string id, string DeletedBy)

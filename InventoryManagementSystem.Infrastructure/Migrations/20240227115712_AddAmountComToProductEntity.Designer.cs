@@ -4,6 +4,7 @@ using InventoryManagementSystem.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InventoryManagementSystem.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240227115712_AddAmountComToProductEntity")]
+    partial class AddAmountComToProductEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -303,7 +306,7 @@ namespace InventoryManagementSystem.Infrastructure.Migrations
 
             modelBuilder.Entity("InventoryManagementSystem.Domain.Models.ProductItem", b =>
                 {
-                    b.Property<string>("Id")
+                    b.Property<string>("SerialNo")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Color")
@@ -338,13 +341,13 @@ namespace InventoryManagementSystem.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("ProductsInventoryId")
+                    b.Property<string>("ProductsInventoryInventoryId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("SerialNo")
+                    b.Property<string>("ProductsInventoryProductId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("SupplierId")
                         .HasColumnType("nvarchar(450)");
@@ -352,7 +355,7 @@ namespace InventoryManagementSystem.Infrastructure.Migrations
                     b.Property<string>("UpdatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.HasKey("SerialNo");
 
                     b.HasIndex("InventoryId");
 
@@ -360,16 +363,19 @@ namespace InventoryManagementSystem.Infrastructure.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.HasIndex("ProductsInventoryId");
-
                     b.HasIndex("SupplierId");
+
+                    b.HasIndex("ProductsInventoryProductId", "ProductsInventoryInventoryId");
 
                     b.ToTable("ProductItems");
                 });
 
             modelBuilder.Entity("InventoryManagementSystem.Domain.Models.ProductsInventory", b =>
                 {
-                    b.Property<string>("Id")
+                    b.Property<string>("ProductId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("InventoryId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("Amount")
@@ -388,25 +394,15 @@ namespace InventoryManagementSystem.Infrastructure.Migrations
                     b.Property<string>("DeletedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("InventoryId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
-
-                    b.Property<string>("ProductId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("UpdatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.HasKey("ProductId", "InventoryId");
 
                     b.HasIndex("InventoryId");
-
-                    b.HasIndex("ProductId");
 
                     b.ToTable("ProductsInventories");
                 });
@@ -607,15 +603,15 @@ namespace InventoryManagementSystem.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("InventoryManagementSystem.Domain.Models.ProductsInventory", "ProductsInventory")
-                        .WithMany("ProductItems")
-                        .HasForeignKey("ProductsInventoryId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
                     b.HasOne("InventoryManagementSystem.Domain.Models.Supplier", null)
                         .WithMany("ProductItems")
                         .HasForeignKey("SupplierId");
+
+                    b.HasOne("InventoryManagementSystem.Domain.Models.ProductsInventory", "ProductsInventory")
+                        .WithMany("ProductItems")
+                        .HasForeignKey("ProductsInventoryProductId", "ProductsInventoryInventoryId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.Navigation("Inventory");
 

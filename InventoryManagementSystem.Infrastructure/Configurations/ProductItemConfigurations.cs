@@ -13,12 +13,15 @@ namespace InventoryManagementSystem.Infrastructure.Configurations
     {
         public void Configure(EntityTypeBuilder<ProductItem> builder)
         {
+            
+
+            builder.HasKey(
+                i => i.Id);
+
+
             builder
                 .Property(i => i.CreatedAt)
                 .HasDefaultValueSql("GetDate()");
-
-            builder.HasKey(
-                i => i.SerialNo);
 
             builder
                 .HasOne(i => i.Inventory)
@@ -35,6 +38,7 @@ namespace InventoryManagementSystem.Infrastructure.Configurations
             builder
                 .HasOne(i => i.ProductsInventory)
                 .WithMany(ii => ii.ProductItems)
+                .HasForeignKey(i=>i.ProductsInventoryId)
                 .OnDelete(DeleteBehavior.NoAction);
 
 

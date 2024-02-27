@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace InventoryManagementSystem.Domain.Models
 {
-    public class ProductItem : BaseEntity
+    public class ProductItem : Base
     {
         public string ProductId { get; set; }
         public Product Product { get; set; }
@@ -14,6 +14,7 @@ namespace InventoryManagementSystem.Domain.Models
         public string InventoryId { get; set; }
         public Inventory Inventory { get; set; }
         
+        public string ProductsInventoryId { get; set; }
         public ProductsInventory ProductsInventory { get; set; }
 
 

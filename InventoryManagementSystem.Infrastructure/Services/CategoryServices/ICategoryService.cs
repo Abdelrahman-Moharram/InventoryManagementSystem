@@ -1,10 +1,7 @@
 ﻿using InventoryManagementSystem.Domain.DTOs.Category;
 using InventoryManagementSystem.Domain.DTOs.Response;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using InventoryManagementSystem.Domain.Models;
+
 
 namespace InventoryManagementSystem.Infrastructure.Services.CategoryServices
 {
@@ -15,8 +12,8 @@ namespace InventoryManagementSystem.Infrastructure.Services.CategoryServices
         Task<GetCategoryDTO> GetById(string id);
         Task<IEnumerable<GetCategoryDTO>> Search(string SearchQuery);
 
-        Task<BaseResponse> AddNew(AddCategoryDTO newCategoryDTO, string CreatedBy);
-        Task<BaseResponse> Update(UpdateCategoryDTO updateCategoryDTO, string UpdatedBy);
+        Task<BaseResponse> AddNew(Category newCategory, string CreatedBy);
+        Task<BaseResponse> Update(Category updateCategory, string UpdatedBy);
         Task<BaseResponse> Delete(string id, string DeletedBy);
     }
 }

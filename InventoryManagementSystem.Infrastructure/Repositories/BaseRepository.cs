@@ -37,8 +37,11 @@ namespace InventoryManagementSystem.Infrastructure.Repositories
             return await _context.Set<T>().FindAsync(id);
         }
 
-        public async Task<T> Find(Expression<Func<T, bool>> expression, string[] includes = null)
+        public async Task<T> Find(Expression<Func<T, bool>> expression, string[] includes = null, bool IgnoreGlobalFilters = false)
         {
+            if(IgnoreGlobalFilters)
+                return await HandleIncludes(_context.Set<T>(), includes).IgnoreQueryFilters().SingleOrDefaultAsync(expression);
+
             return await HandleIncludes(_context.Set<T>(), includes).SingleOrDefaultAsync(expression);
         }
 

@@ -91,8 +91,8 @@ namespace InventoryManagementSystem.Controllers
 
 
 
-        [HttpPost("{id}/products/{ProductId}/add")]
-        [Authorize(Policy = "Permissions.Create.Product")]
+        [HttpGet("{id}/products/{ProductId}/add")]
+        [Authorize(Policy = "Permissions.Create.ProductsInventory")]
         public async Task<IActionResult> AddProductToInventory([FromRoute] string id, [FromRoute] string ProductId)
         {
             if (string.IsNullOrEmpty(id) || string.IsNullOrEmpty(ProductId)) return BadRequest(ModelState);
@@ -100,8 +100,8 @@ namespace InventoryManagementSystem.Controllers
             return Ok(await _productService.AssignProductToInventoryAsync(ProductId, id, User.Claims.FirstOrDefault(i => i.Type == "userId")?.Value));
         }
 
-        [HttpPost("{id}/products/{ProductId}/remove")]
-        [Authorize(Policy = "Permissions.Create.Product")]
+        [HttpGet("{id}/products/{ProductId}/remove")]
+        [Authorize(Policy = "Permissions.Delete.ProductsInventory")]
         public async Task<IActionResult> RemoveFromInventory([FromRoute] string id, [FromRoute] string ProductId)
         {
             if (string.IsNullOrEmpty(id) || string.IsNullOrEmpty(ProductId)) return BadRequest(ModelState);

@@ -1,4 +1,5 @@
-﻿using InventoryManagementSystem.Domain.Models;
+﻿using InventoryManagementSystem.Domain.DTOs.ProductItems;
+using InventoryManagementSystem.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +15,7 @@ namespace InventoryManagementSystem.Domain.DTOs.Product
         public string BrandName { get; set; }
 
         public List<SimpleModule> ProductsInventory { get; set; }
-        public List<ProductItem>? ProductItems { get; set; }
+        public List<GetProductItemIncludedDTO>? ProductItems { get; set; }
 
         public List<string> Colors { get; set; }
     }

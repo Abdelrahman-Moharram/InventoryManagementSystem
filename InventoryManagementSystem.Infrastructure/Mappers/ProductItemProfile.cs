@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using InventoryManagementSystem.Domain.DTOs.ProductItems;
 using InventoryManagementSystem.Domain.Models;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,9 @@ namespace InventoryManagementSystem.Infrastructure.Mappers
     {
         public ProductItemProfile() 
         {
-            CreateMap<ProductItem,  ProductItemProfile>().ReverseMap();
+            CreateMap<FormProductItemDTO, ProductItem>()
+                .ReverseMap();
+
         }
     }
 }

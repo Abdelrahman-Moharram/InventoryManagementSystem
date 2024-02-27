@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using InventoryManagementSystem.Domain.DTOs.Category;
 using InventoryManagementSystem.Domain.DTOs.Response;
+using InventoryManagementSystem.Domain.Models;
 using InventoryManagementSystem.Infrastructure.Services.CategoryServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,9 +13,11 @@ namespace InventoryManagementSystem.Controllers
     public class CategoriesController : ControllerBase
     {
         private readonly ICategoryService _categoryService;
+        private readonly IMapper _mapper;
         public CategoriesController(IMapper mapper, ICategoryService CategoryService)
         {
             _categoryService = CategoryService;
+            _mapper = mapper;
         }
 
 
@@ -41,7 +44,7 @@ namespace InventoryManagementSystem.Controllers
         {
             if (ModelState.IsValid)
             {
-                BaseResponse response = await _categoryService.AddNew(CategoryDTO, User.Claims.FirstOrDefault(i => i.Type == "userId")?.Value);
+                BaseResponse response = await _categoryService.AddNew(_mapper.Map<Category>(CategoryDTO), User.Claims.FirstOrDefault(i => i.Type == "userId")?.Value);
                 if (response.IsSucceeded)
                     return Ok(response.Message);
 
@@ -56,7 +59,7 @@ namespace InventoryManagementSystem.Controllers
         {
             if (ModelState.IsValid && CategoryDTO.Id == id)
             {
-                BaseResponse response = await _categoryService.Update(CategoryDTO, User.Claims.FirstOrDefault(i => i.Type == "userId")?.Value);
+                BaseResponse response = await _categoryService.Update(_mapper.Map<Category>(CategoryDTO), User.Claims.FirstOrDefault(i => i.Type == "userId")?.Value);
                 if (response.IsSucceeded)
                     return Ok(response.Message);
 

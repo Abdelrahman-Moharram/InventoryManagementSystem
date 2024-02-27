@@ -17,6 +17,7 @@
         public IEnumerable<ProductsInventory>? ProductsInventory { get; set; }
         public IEnumerable<ProductItem>? ProductItems { get; set; }
 
+        public int Amount { get; set; }
 
     }
 }

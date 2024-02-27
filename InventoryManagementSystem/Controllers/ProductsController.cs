@@ -46,7 +46,7 @@ namespace InventoryManagementSystem.Controllers
         {
             if (ModelState.IsValid)
             {
-                BaseResponse response = await _productService.AddNew(ProductDTO, User.Claims.FirstOrDefault(i => i.Type == "userId")?.Value);
+                BaseResponse response = await _productService.AddNew(_mapper.Map<Product>(ProductDTO), User.Claims.FirstOrDefault(i => i.Type == "userId")?.Value);
                 if (response.IsSucceeded)
                     return Ok(response.Message);
 
@@ -61,7 +61,7 @@ namespace InventoryManagementSystem.Controllers
         {
             if (ModelState.IsValid && ProductDTO.Id == id)
             {
-                BaseResponse response = await _productService.Update(ProductDTO, User.Claims.FirstOrDefault(i => i.Type == "userId")?.Value);
+                BaseResponse response = await _productService.Update(_mapper.Map<Product>(ProductDTO), User.Claims.FirstOrDefault(i => i.Type == "userId")?.Value);
                 if (response.IsSucceeded)
                     return Ok(response.Message);
 
@@ -87,30 +87,52 @@ namespace InventoryManagementSystem.Controllers
         }
 
 
-        [HttpPost("{id}/inventories/{inevntoryId}/add")]
-        [Authorize(Policy = "Permissions.Create.Product")]
+        [HttpGet("{id}/inventories/{inevntoryId}/add")]
+        [Authorize(Policy = "Permissions.Create.ProductsInventory")]
         public async Task<IActionResult> AddToInventory([FromRoute] string id,[FromRoute] string inevntoryId)
         {
-            if (string.IsNullOrEmpty(id) || string.IsNullOrEmpty(inevntoryId)) return BadRequest("Invalid ");
+            if (string.IsNullOrEmpty(id) ) return BadRequest("Invalid Product Id");
 
-            return Ok(await _productService.AssignProductToInventoryAsync(id, inevntoryId, User.Claims.FirstOrDefault(i => i.Type == "userId")?.Value));
+            if (string.IsNullOrEmpty(inevntoryId)) return BadRequest("Invalid inevntory Id");
+
+
+            BaseResponse response = await _productService.AssignProductToInventoryAsync(id, inevntoryId, User.Claims.FirstOrDefault(i => i.Type == "userId")?.Value);
+            if (response.IsSucceeded)
+                return Ok(response);
+            return BadRequest(response);
         }
 
-        [HttpPost("{id}/inventories/{inevntoryId}/remove")]
-        [Authorize(Policy = "Permissions.Create.Product")]
+        [HttpDelete("{id}/inventories/{inevntoryId}/remove")]
+        [Authorize(Policy = "Permissions.Delete.ProductsInventory")]
         public async Task<IActionResult> RemoveFromInventory([FromRoute] string id, [FromRoute] string inevntoryId)
         {
-            if (string.IsNullOrEmpty(id) || string.IsNullOrEmpty(inevntoryId)) return BadRequest();
-            return Ok(await _productService.RemoveProductFromInventoryAsync(id, inevntoryId, User.Claims.FirstOrDefault(i => i.Type == "userId")?.Value));
+            if (string.IsNullOrEmpty(id)) return BadRequest("Invalid Product Id");
+
+            if (string.IsNullOrEmpty(inevntoryId)) return BadRequest("Invalid inevntory Id");
+
+            BaseResponse response = await _productService.RemoveProductFromInventoryAsync(id, inevntoryId, User.Claims.FirstOrDefault(i => i.Type == "userId")?.Value);
+            if(response.IsSucceeded)
+                return Ok(response);
+            return BadRequest(response);
         }
 
 
 
-        [HttpPost("{id}/add-item")]
+
+        [HttpGet("{id}/items")]
+        [Authorize(Policy = "Permissions.Read.ProductItem")]
+        public async Task<IActionResult> Items([FromRoute] string id)
+        {
+            return NotFound();
+        }   
+
+        [HttpPost("{id}/items/add")]
+        [Authorize(Policy = "Permissions.Create.ProductItem")]
         public async Task<IActionResult> AddItem([FromRoute] string id, [FromBody] FormProductItemDTO addProductItemDTO)
         {
-            if (ModelState.IsValid && addProductItemDTO.ProductId == id)
+            if (ModelState.IsValid )
             {
+                addProductItemDTO.ProductId = id;
                 var entity = _mapper.Map<ProductItem>(addProductItemDTO);
                 var response = await _productService.AddProductItem(entity, User.Claims.FirstOrDefault(i => i.Type == "userId")?.Value);
                 if(response.IsSucceeded)
@@ -120,11 +142,18 @@ namespace InventoryManagementSystem.Controllers
             return BadRequest(ModelState);
         }
 
-        [HttpPost("{id}/edit-item/{serial}")]
-        public async Task<IActionResult> EditItem([FromRoute] string id, [FromRoute] string serial, [FromBody] FormProductItemDTO EditProductItemDTO)
+
+        [HttpPut("{id}/items/edit/{itemId}")]
+        [Authorize(Policy = "Permissions.Update.ProductItem")]
+        public async Task<IActionResult> EditItem([FromRoute] string id, [FromRoute] string itemId, [FromBody] FormProductItemDTO EditProductItemDTO)
         {
-            if (ModelState.IsValid && EditProductItemDTO.ProductId == id && EditProductItemDTO.SerialNo == serial)
+            ModelState.Remove("productId");
+            if(EditProductItemDTO.Id != itemId)
+                return BadRequest($"mismatch item id {EditProductItemDTO.Id} and form id {itemId}");
+            if (ModelState.IsValid)
             {
+                EditProductItemDTO.ProductId = id;
+
                 var entity = _mapper.Map<ProductItem>(EditProductItemDTO);
                 var response = await _productService.EditProductItem(entity, User.Claims.FirstOrDefault(i => i.Type == "userId")?.Value);
                 if (response.IsSucceeded)
@@ -133,13 +162,16 @@ namespace InventoryManagementSystem.Controllers
             }
             return BadRequest(ModelState);
         }
-        
-        [HttpPost("{id}/delete-item/{serial}")]
-        public async Task<IActionResult> DeleteItem([FromRoute] string id, [FromRoute] string serial)
+
+
+
+        [HttpDelete("{id}/items/delete/{itemId}")]
+        [Authorize(Policy = "Permissions.Delete.ProductItem")]
+        public async Task<IActionResult> DeleteItem([FromRoute] string id, [FromRoute] string itemId)
         {
             if (ModelState.IsValid)
             {
-                var response = await _productService.DeleteProductItem(id, serial, User.Claims.FirstOrDefault(i => i.Type == "userId")?.Value);
+                var response = await _productService.DeleteProductItem(id, itemId, User.Claims.FirstOrDefault(i => i.Type == "userId")?.Value);
                 if (response.IsSucceeded)
                     return Ok(response);
                 return BadRequest(response);

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using InventoryManagementSystem.Domain.DTOs.Brand;
 using InventoryManagementSystem.Domain.DTOs.Response;
+using InventoryManagementSystem.Domain.Models;
 using InventoryManagementSystem.Infrastructure.Services.BrandServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -44,7 +45,7 @@ namespace InventoryManagementSystem.Controllers
         {
             if(ModelState.IsValid)
             {
-                BaseResponse response =  await _brandService.AddNew(brandDTO, User.Claims.FirstOrDefault(i => i.Type == "userId")?.Value);
+                BaseResponse response =  await _brandService.AddNew(_mapper.Map<Brand>(brandDTO), User.Claims.FirstOrDefault(i => i.Type == "userId")?.Value);
                 if(response.IsSucceeded) 
                     return Ok(response.Message);
 
@@ -59,7 +60,7 @@ namespace InventoryManagementSystem.Controllers
         {
             if (ModelState.IsValid && brandDTO.Id == id)
             {
-                BaseResponse response = await _brandService.Update(brandDTO, User.Claims.FirstOrDefault(i => i.Type == "userId")?.Value);
+                BaseResponse response = await _brandService.Update(_mapper.Map<Brand>(brandDTO), User.Claims.FirstOrDefault(i => i.Type == "userId")?.Value);
                 if (response.IsSucceeded)
                     return Ok(response.Message);
 

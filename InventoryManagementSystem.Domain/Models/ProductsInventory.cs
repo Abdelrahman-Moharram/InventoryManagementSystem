@@ -1,7 +1,7 @@
 ﻿
 namespace InventoryManagementSystem.Domain.Models
 {
-    public class ProductsInventory : BaseEntity
+    public class ProductsInventory : Base
     {
         public string ProductId { get; set; }
         public Product Product { get; set; }

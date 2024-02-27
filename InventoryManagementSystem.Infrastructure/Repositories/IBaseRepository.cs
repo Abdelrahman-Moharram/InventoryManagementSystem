@@ -11,7 +11,7 @@ namespace InventoryManagementSystem.Infrastructure.Repositories
     {
         Task<IEnumerable<T>> GetAllAsync(string[] includes = null);
         Task<T> GetByIdAsync(string id);
-        Task<T> Find(Expression<Func<T, bool>> expression, string[] includes = null);
+        Task<T> Find(Expression<Func<T, bool>> expression, string[] includes = null, bool IgnoreGlobalFilters = false);
 
         Task<IEnumerable<T>> FindAllAsync(
             Expression<Func<T, bool>> expression,

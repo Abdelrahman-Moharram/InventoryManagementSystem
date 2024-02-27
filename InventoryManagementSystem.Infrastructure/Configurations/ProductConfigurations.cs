@@ -54,7 +54,7 @@ namespace InventoryManagementSystem.Infrastructure.Configurations
                         .HasForeignKey(pi => pi.InventoryId);
 
                         j
-                        .HasKey(j => new { j.ProductId, j.InventoryId });
+                        .HasKey(j => j.Id);
 
                         j
                         .Property(i => i.Amount)

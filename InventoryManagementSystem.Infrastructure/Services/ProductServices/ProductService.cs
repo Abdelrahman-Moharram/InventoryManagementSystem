@@ -40,51 +40,49 @@ namespace InventoryManagementSystem.Infrastructure.Services.Productservices
 
                         includes: new[] { "Inventories", "ProductsInventories", "ProductItems" }
                     ));
-        public async Task<BaseResponse> AddNew(AddProductDTO newProductDTO, string CreatedBy)
+        public async Task<BaseResponse> AddNew(Product newProduct, string CreatedBy)
         {
             if (string.IsNullOrEmpty(CreatedBy))
                 return new BaseResponse { Message = "Can't assign Transacation To user, user id is empty", IsSucceeded = false };
-            if (newProductDTO.Name == null)
+            if (newProduct.Name == null)
                 return new BaseResponse { Message = "Invalid Product Name", IsSucceeded = false };
 
             
             try
             {
-                Product newProduct = _mapper.Map<Product>(newProductDTO);
                 newProduct.CreatedBy = CreatedBy;
                 await _unitOfWork.Products.AddAsync(newProduct);
                 await _unitOfWork.Save();
-                return new BaseResponse { Message = $"Product {newProductDTO.Name} added Successfully", IsSucceeded = true };
+                return new BaseResponse { Message = $"Product {newProduct.Name} added Successfully", IsSucceeded = true };
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Something went wrong while adding {newProductDTO.Name}", ex);
-                return new BaseResponse { Message = $"Something went wrong while adding {newProductDTO.Name}", IsSucceeded = false };
+                _logger.LogError($"Something went wrong while adding {newProduct.Name}", ex);
+                return new BaseResponse { Message = $"Something went wrong while adding {newProduct.Name}", IsSucceeded = false };
             }
 
         }
-        public async Task<BaseResponse> Update(UpdateProductDTO updateProductDTO, string UpdatedBy)
+        public async Task<BaseResponse> Update(Product updateProduct, string UpdatedBy)
         {
             if (string.IsNullOrEmpty(UpdatedBy))
                 return new BaseResponse { Message = "Can't assign Transacation To user, user id is empty", IsSucceeded = false };
-            if (updateProductDTO.Name == null)
+            if (updateProduct.Name == null)
                 return new BaseResponse { Message = "Invalid Product Name", IsSucceeded = false };
 
-            else if (await _unitOfWork.Products.Find(i => i.Id == updateProductDTO.Id) is null)
+            else if (await _unitOfWork.Products.Find(i => i.Id == updateProduct.Id) is null)
                 return new BaseResponse { Message = $"Product Not Found", IsSucceeded = false };
             try
             {
 
-                var entity = _mapper.Map<Product>(updateProductDTO);
-                entity.UpdatedBy = UpdatedBy;
-                await _unitOfWork.Products.UpdateAsync(entity);
+                updateProduct.UpdatedBy = UpdatedBy;
+                await _unitOfWork.Products.UpdateAsync(updateProduct);
                 await _unitOfWork.Save();
-                return new BaseResponse { Message = $"Product {updateProductDTO.Name} Updated Successfully", IsSucceeded = true };
+                return new BaseResponse { Message = $"Product {updateProduct.Name} Updated Successfully", IsSucceeded = true };
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Something went wrong while updating {updateProductDTO.Name}", ex);
-                return new BaseResponse { Message = $"Something went wrong while updating {updateProductDTO.Name}", IsSucceeded = false };
+                _logger.LogError($"Something went wrong while updating {updateProduct.Name}", ex);
+                return new BaseResponse { Message = $"Something went wrong while updating {updateProduct.Name}", IsSucceeded = false };
             }
         }
         public async Task<BaseResponse> Delete(string id, string DeletedBy)
@@ -117,14 +115,14 @@ namespace InventoryManagementSystem.Infrastructure.Services.Productservices
                 return new BaseResponse { Message = "Can't assign Transacation To user, user id is empty", IsSucceeded = false };
 
             if (string.IsNullOrEmpty(ProductId) || await _unitOfWork.Products.Find(i => i.Id == ProductId ) == null)
-                return new BaseResponse { IsSucceeded = false, Message = "Product is invalid" };
+                return new BaseResponse { IsSucceeded = false, Message = "this Product Not Found" };
 
             if (string.IsNullOrEmpty(InventoryId) || await _unitOfWork.Inventories.Find(i => i.Id == InventoryId) == null)
-                return new BaseResponse { IsSucceeded = false, Message = "Inventory is invalid" };
-
+                return new BaseResponse { IsSucceeded = false, Message = "this Inventory Not Found" };
 
             if (await _unitOfWork.ProductsInventories.Find(i => i.ProductId == ProductId && i.InventoryId == InventoryId) != null)
                 return new BaseResponse { IsSucceeded = false, Message = "Product already assigned to the inventory" };
+
 
             try
             {
@@ -152,10 +150,10 @@ namespace InventoryManagementSystem.Infrastructure.Services.Productservices
             if (string.IsNullOrEmpty(DeletedBy))
                 return new BaseResponse { Message = "Can't assign Transacation To user, user id is empty", IsSucceeded = false };
             if (string.IsNullOrEmpty(ProductId) || await _unitOfWork.Products.Find(i => i.Id == ProductId) == null)
-                return new BaseResponse { IsSucceeded = false, Message = "Product is invalid" };
+                return new BaseResponse { IsSucceeded = false, Message = "this Product Not Found" };
 
             if (string.IsNullOrEmpty(InventoryId) || await _unitOfWork.Inventories.Find(i => i.Id == InventoryId) == null)
-                return new BaseResponse { IsSucceeded = false, Message = "Inventory is invalid" };
+                return new BaseResponse { IsSucceeded = false, Message = "this Inventory Not Found" };
 
 
             
@@ -178,16 +176,36 @@ namespace InventoryManagementSystem.Infrastructure.Services.Productservices
             }
 
         }
+        
         public async Task<BaseResponse> AddProductItem(ProductItem productItem, string CreatedBy)
         {
-            if (string.IsNullOrEmpty(productItem.ProductId) || await _unitOfWork.Products.Find(i => i.Id == productItem.ProductId) is null)
+            
+            var product = await _unitOfWork.Products.Find(i=>i.Id == productItem.ProductId);
+
+            if ( product is null)
                 return new BaseResponse { IsSucceeded = false, Message = "This Product Not Found" };
 
-            if (string.IsNullOrEmpty(productItem.InventoryId) || await _unitOfWork.Inventories.Find(i => i.Id == productItem.InventoryId) is null)
+            var inventory = await _unitOfWork.Inventories.Find(i => i.Id == productItem.InventoryId);
+
+            if (inventory is null)
                 return new BaseResponse { IsSucceeded = false, Message = "This Inventory Not Found" };
+
+            var productInventory = await _unitOfWork.ProductsInventories.Find(i => i.ProductId == productItem.ProductId && i.InventoryId == productItem.InventoryId);
+            
+            if (productInventory is null)
+                return new BaseResponse { IsSucceeded = false, Message = "This Product not available in this Inventory" };
+
+            if (await _unitOfWork.ProductItems.Find(i => i.SerialNo == productItem.SerialNo, IgnoreGlobalFilters: true) != null)
+                return new BaseResponse { IsSucceeded = false, Message = $"The product '{product.Name}' with serial '{productItem.SerialNo}' already exists" };
+
             try
             {
+
+                product.Amount += 1;
+                productInventory.Amount += 1;
+                productItem.Id = Guid.NewGuid().ToString();
                 productItem.CreatedBy = CreatedBy;
+                productItem.ProductsInventoryId = productInventory.Id;
                 await _unitOfWork.ProductItems.AddAsync(productItem);
                 await _unitOfWork.Save();
                 return new BaseResponse { IsSucceeded = true, Message = "Item Added Successfully!" };
@@ -201,12 +219,20 @@ namespace InventoryManagementSystem.Infrastructure.Services.Productservices
         public async Task<BaseResponse> EditProductItem(ProductItem productItem, string UpdatedBy)
         {
 
-            if (await _unitOfWork.ProductItems.Find(i => i.ProductId == productItem.ProductId && i.InventoryId == productItem.InventoryId) is null)
+            if (await _unitOfWork.ProductItems.Find(i => i.Id == productItem.Id) is null)
                 return new BaseResponse { IsSucceeded = false, Message = "This Product item is Not Found" };
+
+            if (await _unitOfWork.ProductItems.Find(i => i.SerialNo == productItem.SerialNo && i.Id != productItem.Id) != null)
+                return new BaseResponse { IsSucceeded = false, Message = "Product with this serial number already exists in anther item" };
+
+            var productInventory = await _unitOfWork.ProductsInventories.Find(i=>i.ProductId == productItem.ProductId && i.InventoryId == productItem.InventoryId);
+            if (productInventory == null)
+                return new BaseResponse { IsSucceeded = false, Message = "This Product is Not found in this inventory" };
 
             try
             {
                 productItem.UpdatedBy = UpdatedBy;
+                productItem.ProductsInventoryId = productInventory.Id;
                 await _unitOfWork.ProductItems.UpdateAsync(productItem);
                 await _unitOfWork.Save();
                 return new BaseResponse { IsSucceeded = true, Message = "Item Updated Successfully!" };
@@ -217,14 +243,18 @@ namespace InventoryManagementSystem.Infrastructure.Services.Productservices
                 return new BaseResponse { Message = "Something went wrong while Updating item of product", IsSucceeded = false };
             }
         }
-        public async Task<BaseResponse> DeleteProductItem(string productId, string SerialNo, string DeletedBy)
+        public async Task<BaseResponse> DeleteProductItem(string productId, string itemId, string DeletedBy)
         {
-            var productItem = await _unitOfWork.ProductItems.Find(i => i.ProductId == productId && i.SerialNo == SerialNo);
+            var productItem = await _unitOfWork.ProductItems.Find(i => i.Id == itemId && i.ProductId == productId);
             if (productItem is null)
                 return new BaseResponse { IsSucceeded = false, Message = "This Product item is Not Found" };
 
             try
             {
+                var productInventory = await _unitOfWork.ProductsInventories.Find(i => i.ProductId == productItem.ProductId && i.InventoryId == productItem.InventoryId);
+                var product = await _unitOfWork.Products.Find(i => i.Id == productItem.ProductId);
+                product.Amount -= 1;
+                productInventory.Amount -= 1;
                 productItem.DeletedBy = DeletedBy;
                 await _unitOfWork.ProductItems.DeleteAsync(productItem);
                 await _unitOfWork.Save();

@@ -1,5 +1,6 @@
 ﻿using InventoryManagementSystem.Domain.DTOs.Brand;
 using InventoryManagementSystem.Domain.DTOs.Response;
+using InventoryManagementSystem.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,8 +16,8 @@ namespace InventoryManagementSystem.Infrastructure.Services.BrandServices
         Task<GetBrandDTO> GetById(string id);
         Task<IEnumerable<GetBrandDTO>> Search(string SearchQuery);
 
-        Task<BaseResponse> AddNew(AddBrandDTO newBrandDTO, string CreatedBy);
-        Task<BaseResponse> Update(UpdateBrandDTO updateBrandDTO, string UpdatedBy);
+        Task<BaseResponse> AddNew(Brand newBrand, string CreatedBy);
+        Task<BaseResponse> Update(Brand updateBrand, string UpdatedBy);
         Task<BaseResponse> Delete(string id, string DeletedBy);
     }
 }
