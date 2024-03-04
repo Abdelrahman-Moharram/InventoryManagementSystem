@@ -19,10 +19,10 @@ I used The following technologies
 - Manage Users Roles (Add to Role, Delete From Role)
 - Manage Roles (Add Role, Delete Role)
 - Edit Roles Permissions
-- Manage Products, Inventories, Categories, Brands, and Product Items (Add, Update, Delete)
+- Manage Products, Inventories, Categories, Brands, and Product Items (Read, Add, Update, Delete)
 
 ### Admins
-- Manage Products, Inventories, Categories, Brands, and Product Items (Add, Update) Only
+- Manage Products, Inventories, Categories, Brands, and Product Items (Read, Add, Update) Only
 
 ### Suppliers 
 - Can manage their stocks of several products with different types (Categories) and Brands In different ways like (Adding stock items, Deleteing stock items)
@@ -35,4 +35,27 @@ I used The following technologies
 - Cancel their orders
 
 -----
+# Technics
+  
+## Database
+As I mentioned, I used SQL Server as the database engine, there are some core entities like product and inventories, and the relation between them is a Many to Many relation generates (ProductsInventories) table. This table Can Have Many product Items to specify each item's data (Color and serial number) and the collection of these items amount should automatically reflect The Amount of Value in the Product table and the ProductsInventories table you can find this in 
 
+ - InventoryManagementSystem.Infrastructure > Services > Product > ProductService.cs 
+ 
+and here is the Entity Diagram, it can be clearer 
+![image](https://github.com/Abdelrahman-Moharram/InventoryManagementSystem/assets/41553398/b750abb7-64da-4c92-a8d5-bf593aadb20c)
+
+---
+## First Launch
+At the first run of this web application, the System seeds the following data
+ - Users (UserName, Email)
+   - Customer, Customer@site.com
+   - Supplier, Supplier@site.com
+   - Admin, admin@site.com
+   - Super-Admin, superadmin@site.com
+     
+ - Roles (This project uses permissions based authorizations, Each role automatically has its permissions added)
+   - Customer -> Make orders and manage these orders update/delete
+   - Supplier -> Add products and items of products, can only update/remove products he added 
+   - Admin -> Has All Permissions for all Modules Except delete, and can't Edit roles permissions or Add/Delete a role 
+   - SuperAdmin -> Has All Permissions for all Modules (Read, Add, Update, Delete)
