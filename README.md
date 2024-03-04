@@ -7,10 +7,10 @@ I used The following technologies
   - Permissions Based Authorizations
   - Logging
   - Repository Pattern with Unit of work + Services
+  - Soft delete
   - Data Seeding
   - Auto Mappers
   - Filters
-  - Soft delete
 - SQL Server
 
 -----
@@ -53,8 +53,15 @@ At the first run of this web application, the System seeds the following data
    - Admin, admin@site.com
    - Super-Admin, superadmin@site.com
      
- - Roles (This project uses permissions based authorizations, Each role automatically has its permissions added)
+ - Roles (This project uses Permissions based authorizations, Each role automatically has its permissions added), I used it in Endpoints like the next image
+   
+     ![image](https://github.com/Abdelrahman-Moharram/InventoryManagementSystem/assets/41553398/651b41ac-29d6-492c-8f1b-aa15846f6f8d)
+
    - Customer -> Make orders and manage these orders update/delete
    - Supplier -> Add products and items of products, can only update/remove products he added 
    - Admin -> Has All Permissions for all Modules Except delete, and can't Edit roles permissions or Add/Delete a role 
    - SuperAdmin -> Has All Permissions for all Modules (Read, Add, Update, Delete)
+----
+## Flow
+So as we know we can use routes as configured in program.cs, so the route calls the controller, and the controller calls the ActionResutl (endpoint). The controller takes DTOs and Return DTO (what should appear to the end-user), but after the controller takes the DTO, it turns it into an Entity instance and sends it to The controller Service, and The service has the business logic to all CRUD operations for each Entity and Case and its Related. The Services Call the Repository related to the operation it does. and The repository has the DBVontext that converts the operations into SQL Statements to be applied to the database. 
+<strong>Note</strong>: that the Services have the logic that ensures the correctness of each operations user fire, including (try/catch), loggers, and return the results in DTOs in case of GET request, and return Responses (some way I created to show if the operations performed or the problem with a message that express that problem).
