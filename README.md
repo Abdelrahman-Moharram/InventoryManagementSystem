@@ -39,10 +39,9 @@ I used The following technologies
   
 ## Database
 As I mentioned, I used SQL Server as the database engine, there are some core entities like product and inventories, and the relation between them is a Many to Many relation generates (ProductsInventories) table. This table Can Have Many product Items to specify each item's data (Color and serial number) and the collection of these items amount should automatically reflect The Amount of Value in the Product table and the ProductsInventories table you can find this in 
-
- - InventoryManagementSystem.Infrastructure > Services > Product > ProductService.cs 
- 
-and here is the Entity Diagram, it can be clearer 
+ - InventoryManagementSystem.Infrastructure > Services > Product > ProductService.cs
+   
+here is the Entity Diagram, it can be clearer 
 ![image](https://github.com/Abdelrahman-Moharram/InventoryManagementSystem/assets/41553398/b750abb7-64da-4c92-a8d5-bf593aadb20c)
 
 ---
