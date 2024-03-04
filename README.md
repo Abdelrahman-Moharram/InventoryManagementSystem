@@ -47,11 +47,11 @@ here is the Entity Diagram, it can be clearer
 ---
 ## First Launch
 At the first run of this web application, the System seeds the following data
- - Users (UserName, Email)
-   - Customer, Customer@site.com
-   - Supplier, Supplier@site.com
-   - Admin, admin@site.com
-   - Super-Admin, superadmin@site.com
+ - Users (UserName, Email, Password)
+   - Customer, Customer@site.com, 12345678
+   - Supplier, Supplier@site.com, 12345678
+   - Admin, admin@site.com, 12345678
+   - Super-Admin, superadmin@site.com, 12345678
      
  - Roles (This project uses Permissions based authorizations, Each role automatically has its permissions added), I used it in Endpoints like the next image
    
