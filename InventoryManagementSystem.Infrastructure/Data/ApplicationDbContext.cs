@@ -45,7 +45,13 @@ namespace InventoryManagementSystem.Infrastructure.Data
             new OrderConfigurations().Configure(builder.Entity<Order>());
             new BrandsConfigurations().Configure(builder.Entity<Brand>());
 
+            builder.Entity<UploadedFile>()
+                .HasOne(i => i.Product)
+                .WithMany(i => i.UploadedFiles)
+                .HasForeignKey(i => i.ProductId);
 
+            builder.Entity<UploadedFile>()
+                .HasQueryFilter(i=>!i.IsDeleted);
 
         }
 
@@ -62,7 +68,8 @@ namespace InventoryManagementSystem.Infrastructure.Data
 
         public DbSet<Order> Orders { get; set; }
         public DbSet<Brand> Brands { get; set; }
-        
+        public DbSet<UploadedFile> UploadedFiles { get; set; }
+
 
     }
 }

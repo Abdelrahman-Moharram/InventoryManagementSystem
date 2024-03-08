@@ -1,10 +1,6 @@
 ﻿using InventoryManagementSystem.Domain.Models;
 using InventoryManagementSystem.Infrastructure.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace InventoryManagementSystem.Infrastructure.Repositories
 {
@@ -19,6 +15,7 @@ namespace InventoryManagementSystem.Infrastructure.Repositories
         public IBaseRepository<ProductItem> ProductItems { get; private set;}
         public IBaseRepository<Order> Orders { get; private set;}
         public IBaseRepository<Brand> Brands { get; private set; }
+        public IBaseRepository<UploadedFile> UploadedFiles { get; private set; }
 
 
         public UnitOfWork(ApplicationDbContext context)
@@ -32,6 +29,7 @@ namespace InventoryManagementSystem.Infrastructure.Repositories
             ProductItems            = new BaseRepository<ProductItem>(_context);
             Orders                  = new BaseRepository<Order>(_context);
             Brands                  = new BaseRepository<Brand>(_context);
+            UploadedFiles           = new BaseRepository<UploadedFile>(_context);
         }
 
         public async Task<int> Save()

@@ -36,6 +36,7 @@ namespace InventoryManagementSystem.Infrastructure.Configurations
             builder
                 .HasQueryFilter(i => !i.IsDeleted);
 
+            
 
             builder
                 .HasMany(i => i.Inventories)

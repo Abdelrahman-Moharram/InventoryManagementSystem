@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using InventoryManagementSystem.Domain.DTOs.Product;
+using InventoryManagementSystem.Domain.DTOs.ProductItems;
 using InventoryManagementSystem.Domain.DTOs.Response;
 using InventoryManagementSystem.Domain.Models;
 using InventoryManagementSystem.Infrastructure.Repositories;
@@ -21,14 +22,28 @@ namespace InventoryManagementSystem.Infrastructure.Services.Productservices
         }
         public async Task<IEnumerable<GetProductDTO>> GetAll()
         {
-            return _mapper.Map<IEnumerable<GetProductDTO>>(await _unitOfWork.Products.GetAllAsync());
+
+            return _mapper.Map<IEnumerable<GetProductDTO>>(
+                await _unitOfWork.Products.GetAllAsync()
+                );
         }
-        public async Task<IEnumerable<GetProductDTO>> GetAllWithBaseIncludes() =>
-            _mapper.Map<IEnumerable<GetProductDTO>>(
+        public async Task<IEnumerable<GetProductForTableDTO>> GetAllAsDataTable()
+        {
+
+            return _mapper.Map<IEnumerable<GetProductForTableDTO>>(
                 await _unitOfWork.Products.GetAllAsync(new[] { "Inventories", "ProductsInventory", "ProductItems", "Brand", "Category" })
                 );
+        }
+        public async Task<IEnumerable<GetProductDTO>> GetAllWithBaseIncludes()
+        {
+            var Products = await _unitOfWork.Products.GetAllAsync(new[] { "Inventories", "ProductsInventory", "ProductItems", "Brand", "Category", "UploadedFiles" });
+            return _mapper.Map<IEnumerable<GetProductDTO>>(
+                Products
+                );
+        }
         public async Task<GetProductDTO> GetById(string id) => 
-            _mapper.Map<GetProductDTO>(await _unitOfWork.Products.GetByIdAsync(id));
+            _mapper.Map<GetProductDTO>(await _unitOfWork.Products.Find(i=>i.Id == id, includes: new[] { "Inventories", "ProductsInventory", "ProductItems", "Brand", "Category", "UploadedFiles" }));
+
         public async Task<IEnumerable<GetProductDTO>> Search(string SearchQuery) => 
             _mapper.Map<IEnumerable<GetProductDTO>>(
                         await _unitOfWork.Products.FindAllAsync(
@@ -38,9 +53,20 @@ namespace InventoryManagementSystem.Infrastructure.Services.Productservices
                                 i.Category.Name.Contains(SearchQuery) ||
                                 i.ModelName == SearchQuery,
 
-                        includes: new[] { "Inventories", "ProductsInventories", "ProductItems" }
+                        includes: new[] { "Inventories", "ProductsInventories", "ProductItems" , "UploadedFiles" }
                     ));
-        public async Task<BaseResponse> AddNew(Product newProduct, string CreatedBy)
+
+        public async Task<IEnumerable<GetProductDTO>> GetBySub(string CategoryName, string BrandName) =>
+            _mapper.Map<IEnumerable<GetProductDTO>>(
+                        await _unitOfWork.Products.FindAllAsync(
+                            expression:
+                                i=>
+                                i.Category.Name == CategoryName ||
+                                i.Brand.Name == BrandName,
+
+                        includes: new[] { "Brand", "Category", "ProductItems", "UploadedFiles" }
+                    ));
+        public async Task<BaseResponse> AddNew(Product newProduct, List<UploadedFile> uploadedFiles, string CreatedBy)
         {
             if (string.IsNullOrEmpty(CreatedBy))
                 return new BaseResponse { Message = "Can't assign Transacation To user, user id is empty", IsSucceeded = false };
@@ -50,7 +76,13 @@ namespace InventoryManagementSystem.Infrastructure.Services.Productservices
             
             try
             {
+
                 newProduct.CreatedBy = CreatedBy;
+                foreach(var file in uploadedFiles)
+                {
+                    file.ProductId = newProduct.Id;
+                    await _unitOfWork.UploadedFiles.AddAsync(file);
+                }
                 await _unitOfWork.Products.AddAsync(newProduct);
                 await _unitOfWork.Save();
                 return new BaseResponse { Message = $"Product {newProduct.Name} added Successfully", IsSucceeded = true };
@@ -62,7 +94,7 @@ namespace InventoryManagementSystem.Infrastructure.Services.Productservices
             }
 
         }
-        public async Task<BaseResponse> Update(Product updateProduct, string UpdatedBy)
+        public async Task<BaseResponse> Update(Product updateProduct, List<UploadedFile> uploadedFiles, string UpdatedBy)
         {
             if (string.IsNullOrEmpty(UpdatedBy))
                 return new BaseResponse { Message = "Can't assign Transacation To user, user id is empty", IsSucceeded = false };
@@ -75,6 +107,11 @@ namespace InventoryManagementSystem.Infrastructure.Services.Productservices
             {
 
                 updateProduct.UpdatedBy = UpdatedBy;
+                foreach (var file in uploadedFiles)
+                {
+                    file.ProductId = updateProduct.Id;
+                    await _unitOfWork.UploadedFiles.AddAsync(file);
+                }
                 await _unitOfWork.Products.UpdateAsync(updateProduct);
                 await _unitOfWork.Save();
                 return new BaseResponse { Message = $"Product {updateProduct.Name} Updated Successfully", IsSucceeded = true };
@@ -177,6 +214,20 @@ namespace InventoryManagementSystem.Infrastructure.Services.Productservices
 
         }
         
+        public async Task<IEnumerable<GetProductItemIncludedDTO>> GetProductItems(string ProductId)
+        {
+            var product = _unitOfWork.Products.Find(i => i.Id == ProductId, includes: new[] { "ProductItems" }).Result;
+            var productItems = product.ProductItems;
+            productItems.ToList().ForEach(pi=>pi.Product = product);
+            return _mapper.Map<IEnumerable<GetProductItemIncludedDTO>>(productItems);
+        }
+        public async Task<ProductItem> GetProductItem(string ProductItemId)
+        {
+            var productItem = await _unitOfWork.ProductItems.GetByIdAsync(ProductItemId);
+            productItem.Product = await _unitOfWork.Products.GetByIdAsync(productItem.ProductId);
+            return productItem;
+
+        }
         public async Task<BaseResponse> AddProductItem(ProductItem productItem, string CreatedBy)
         {
             
@@ -200,15 +251,19 @@ namespace InventoryManagementSystem.Infrastructure.Services.Productservices
 
             try
             {
+                product.Amount = await _unitOfWork.ProductItems.CountAsync(i=>i.ProductId==product.Id);
+                productInventory.Amount = await _unitOfWork.ProductItems.CountAsync(i=>i.ProductId == product.Id && i.ProductsInventoryId == productInventory.Id);
 
-                product.Amount += 1;
-                productInventory.Amount += 1;
                 productItem.Id = Guid.NewGuid().ToString();
                 productItem.CreatedBy = CreatedBy;
                 productItem.ProductsInventoryId = productInventory.Id;
+
+                await _unitOfWork.Products.UpdateAsync(product);
+                await _unitOfWork.ProductsInventories.UpdateAsync(productInventory);
                 await _unitOfWork.ProductItems.AddAsync(productItem);
                 await _unitOfWork.Save();
                 return new BaseResponse { IsSucceeded = true, Message = "Item Added Successfully!" };
+
             }
             catch (Exception ex)
             {
@@ -253,9 +308,11 @@ namespace InventoryManagementSystem.Infrastructure.Services.Productservices
             {
                 var productInventory = await _unitOfWork.ProductsInventories.Find(i => i.ProductId == productItem.ProductId && i.InventoryId == productItem.InventoryId);
                 var product = await _unitOfWork.Products.Find(i => i.Id == productItem.ProductId);
-                product.Amount -= 1;
-                productInventory.Amount -= 1;
+
+                product.Amount = await _unitOfWork.ProductItems.CountAsync(i => i.ProductId == product.Id);
+                productInventory.Amount = await _unitOfWork.ProductItems.CountAsync(i => i.ProductId == product.Id && i.ProductsInventoryId == productInventory.Id);
                 productItem.DeletedBy = DeletedBy;
+                
                 await _unitOfWork.ProductItems.DeleteAsync(productItem);
                 await _unitOfWork.Save();
                 return new BaseResponse { IsSucceeded = true, Message = "Item Removed Successfully!" };
@@ -266,6 +323,7 @@ namespace InventoryManagementSystem.Infrastructure.Services.Productservices
                 return new BaseResponse { Message = "Something went wrong while Removing item of product", IsSucceeded = false };
             }
         }
+
 
     }
 }

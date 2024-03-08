@@ -2,6 +2,7 @@
 using InventoryManagementSystem.Domain.DTOs.Product;
 using InventoryManagementSystem.Domain.DTOs.ProductItems;
 using InventoryManagementSystem.Domain.DTOs.Response;
+using InventoryManagementSystem.Domain.Helpers;
 using InventoryManagementSystem.Domain.Models;
 using InventoryManagementSystem.Infrastructure.Repositories;
 using InventoryManagementSystem.Infrastructure.Services.Productservices;
@@ -29,6 +30,9 @@ namespace InventoryManagementSystem.Controllers
         [Authorize(Policy = "Permissions.Read.Product")]
         public async Task<IActionResult> Index() => Ok(await _productService.GetAll());
 
+        [HttpGet("table")]
+        [Authorize(Policy = "Permissions.Read.Product")]
+        public async Task<IActionResult> DataTable() => Ok(await _productService.GetAllAsDataTable());
 
         [HttpGet("all")]
         [Authorize(Policy = "Permissions.Read.Product")]
@@ -39,14 +43,22 @@ namespace InventoryManagementSystem.Controllers
         [Authorize(Policy = "Permissions.Read.Product")]
         public async Task<IActionResult> Details(string id) => Ok(await _productService.GetById(id));
 
+        [HttpGet("search")]
+        public async Task<IActionResult> GetProductBySub([FromQuery] string categoryName=null, [FromQuery] string brandName = null)
+            => Ok(await _productService.GetBySub(categoryName, brandName));
 
         [HttpPost("add")]
         [Authorize(Policy = "Permissions.Create.Product")]
-        public async Task<IActionResult> Add([FromBody] AddProductDTO ProductDTO)
+        public async Task<IActionResult> Add([FromForm] AddProductDTO ProductDTO, List<IFormFile> Images)
         {
             if (ModelState.IsValid)
             {
-                BaseResponse response = await _productService.AddNew(_mapper.Map<Product>(ProductDTO), User.Claims.FirstOrDefault(i => i.Type == "userId")?.Value);
+                FileUpload fileUpload = new();
+                var userId = User.Claims.FirstOrDefault(i => i.Type == "userId")?.Value;
+                var entity = _mapper.Map<Product>(ProductDTO);
+                var uploadedFiles = fileUpload.UploadProductImages(Images, entity.Id, userId);
+                
+                BaseResponse response = await _productService.AddNew(_mapper.Map<Product>(ProductDTO), uploadedFiles, userId);
                 if (response.IsSucceeded)
                     return Ok(response.Message);
 
@@ -57,11 +69,16 @@ namespace InventoryManagementSystem.Controllers
 
         [HttpPut("Edit/{id}")]
         [Authorize(Policy = "Permissions.Update.Product")]
-        public async Task<IActionResult> Update([FromBody] UpdateProductDTO ProductDTO, string id)
+        public async Task<IActionResult> Update([FromForm] UpdateProductDTO ProductDTO,[FromRoute] string id, List<IFormFile> Images)
         {
             if (ModelState.IsValid && ProductDTO.Id == id)
             {
-                BaseResponse response = await _productService.Update(_mapper.Map<Product>(ProductDTO), User.Claims.FirstOrDefault(i => i.Type == "userId")?.Value);
+                FileUpload fileUpload = new();
+                var userId = User.Claims.FirstOrDefault(i => i.Type == "userId")?.Value;
+                var entity = _mapper.Map<Product>(ProductDTO);
+                var uploadedFiles = fileUpload.UploadProductImages(Images, entity.Id, userId);
+
+                BaseResponse response = await _productService.Update(_mapper.Map<Product>(ProductDTO), uploadedFiles, User.Claims.FirstOrDefault(i => i.Type == "userId")?.Value);
                 if (response.IsSucceeded)
                     return Ok(response.Message);
 

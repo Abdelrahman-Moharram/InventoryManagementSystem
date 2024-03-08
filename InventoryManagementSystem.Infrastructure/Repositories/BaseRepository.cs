@@ -8,15 +8,18 @@ using System.Linq.Expressions;
 
 namespace InventoryManagementSystem.Infrastructure.Repositories
 {
-    public class BaseRepository<T> : IBaseRepository<T> where T : BaseEntity
+    public class BaseRepository<T> : IBaseRepository<T> where T : Base
     {
         private ApplicationDbContext _context { get; }
 
-        private IQueryable<T> HandleIncludes(IQueryable<T> query, string[] includes = null)
+        private IQueryable<T> HandleIncludes(IQueryable<T> query, string[] includes = null, bool IgnoreGlobalFilters = false)
         {
             if (includes != null)
                 foreach (var include in includes)
-                    query = query.Include(include);
+                    query = query.Include(include).AsNoTracking();
+                    if(IgnoreGlobalFilters)
+                        query = query.IgnoreQueryFilters();
+
 
             return query;
         }
@@ -27,9 +30,9 @@ namespace InventoryManagementSystem.Infrastructure.Repositories
         }
 
 
-        public async Task<IEnumerable<T>> GetAllAsync(string[] includes = null)
+        public async Task<IEnumerable<T>> GetAllAsync(string[] includes = null, bool IgnoreGlobalFilters = false)
         {
-            return await HandleIncludes(_context.Set<T>(), includes).ToListAsync();
+            return await HandleIncludes(_context.Set<T>(), includes, IgnoreGlobalFilters).ToListAsync();
         }
 
         public async Task<T> GetByIdAsync(string id)
@@ -39,10 +42,8 @@ namespace InventoryManagementSystem.Infrastructure.Repositories
 
         public async Task<T> Find(Expression<Func<T, bool>> expression, string[] includes = null, bool IgnoreGlobalFilters = false)
         {
-            if(IgnoreGlobalFilters)
-                return await HandleIncludes(_context.Set<T>(), includes).IgnoreQueryFilters().SingleOrDefaultAsync(expression);
 
-            return await HandleIncludes(_context.Set<T>(), includes).SingleOrDefaultAsync(expression);
+            return await HandleIncludes(_context.Set<T>(), includes, IgnoreGlobalFilters).SingleOrDefaultAsync(expression);
         }
 
         public async Task<IEnumerable<T>> FindAllAsync(
@@ -51,10 +52,11 @@ namespace InventoryManagementSystem.Infrastructure.Repositories
             int? skip=null, 
             Expression<Func<T, object>> orderBy=null,
             string orderDirection = null,
-            string[] includes = null
+            string[] includes = null,
+            bool IgnoreGlobalFilters = false
             )
         {
-            var query = HandleIncludes(_context.Set<T>(), includes).Where(expression);
+            var query = HandleIncludes(_context.Set<T>(), includes, IgnoreGlobalFilters).Where(expression);
 
 
             if (take.HasValue)

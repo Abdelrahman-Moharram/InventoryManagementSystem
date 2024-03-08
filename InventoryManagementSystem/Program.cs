@@ -11,6 +11,7 @@ using InventoryManagementSystem.Infrastructure.Services.AuthServices;
 using InventoryManagementSystem.Infrastructure.Services.BrandServices;
 using InventoryManagementSystem.Infrastructure.Services.CategoryServices;
 using InventoryManagementSystem.Infrastructure.Services.InventoryServices;
+using InventoryManagementSystem.Infrastructure.Services.OrderServices;
 using InventoryManagementSystem.Infrastructure.Services.Productservices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -23,6 +24,7 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -42,6 +44,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(
 
 // ______________________________ Dependancy Injections _________________________________//
     builder.Services.Configure<JWTSettings>(builder.Configuration.GetSection("JWT"));
+
     builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
     builder.Services.AddScoped<IAuthService, AuthService>();
     builder.Services.AddScoped<IRoleService, RoleService>();
@@ -50,10 +53,11 @@ builder.Services.AddDbContext<ApplicationDbContext>(
     builder.Services.AddScoped<IBrandService, BrandService>();
     builder.Services.AddScoped<ICategoryService, CategoryService>();
     builder.Services.AddScoped<IInventoryService, InventoryService>();
+    builder.Services.AddScoped<IOrderService, OrderService>();
 
 
 // Permissions
-    builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
+builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
     builder.Services.AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler>();
 // ______________________________ End Dependancy Injections _________________________________//
 
@@ -117,6 +121,20 @@ builder.Services.AddAutoMapper(typeof(InventoryProfile));
 builder.Services.AddAutoMapper(typeof(ProductProfile));
 builder.Services.AddAutoMapper(typeof(ProductItemProfile));
 builder.Services.AddAutoMapper(typeof(ProductsInventoryProfile));
+builder.Services.AddAutoMapper(typeof(OrderProfile));
+
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: MyAllowSpecificOrigins,
+                      policy =>
+                      {
+                          policy.AllowAnyOrigin();
+                          policy.AllowAnyMethod();
+                          policy.AllowAnyHeader();
+                          policy.AllowAnyOrigin();
+                      });
+});
 
 // ------------------------------------------------------- //
 
@@ -175,6 +193,11 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors(MyAllowSpecificOrigins);
+
+app.UseDefaultFiles();
+app.UseStaticFiles();
 
 app.UseAuthentication();
 app.UseAuthorization();

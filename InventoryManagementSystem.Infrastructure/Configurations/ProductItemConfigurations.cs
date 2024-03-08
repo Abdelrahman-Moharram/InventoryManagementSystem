@@ -49,7 +49,8 @@ namespace InventoryManagementSystem.Infrastructure.Configurations
                 .OnDelete(DeleteBehavior.NoAction);
 
             builder
-                .HasQueryFilter(i => !i.IsDeleted);
+                .HasQueryFilter(i => !i.IsDeleted )
+                .HasQueryFilter(ii=> !ii.IsSelled);
 
         }
     }

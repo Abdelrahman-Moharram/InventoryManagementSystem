@@ -4,6 +4,8 @@
     {
         public string Name { get; set; }
         public string ModelName { get; set; }
+        
+
         public string? Description { get; set; }
         public decimal Price { get; set; }
 
@@ -16,7 +18,7 @@
 
         public IEnumerable<ProductsInventory>? ProductsInventory { get; set; }
         public IEnumerable<ProductItem>? ProductItems { get; set; }
-
+        public IEnumerable<UploadedFile>? UploadedFiles { get; set; }
         public int Amount { get; set; }
 
     }

@@ -9,7 +9,7 @@ namespace InventoryManagementSystem.Infrastructure.Repositories
 {
     public interface IBaseRepository<T> where T : class
     {
-        Task<IEnumerable<T>> GetAllAsync(string[] includes = null);
+        Task<IEnumerable<T>> GetAllAsync(string[] includes = null, bool IgnoreGlobalFilters = false);
         Task<T> GetByIdAsync(string id);
         Task<T> Find(Expression<Func<T, bool>> expression, string[] includes = null, bool IgnoreGlobalFilters = false);
 
@@ -19,7 +19,8 @@ namespace InventoryManagementSystem.Infrastructure.Repositories
             int? skip= null,
             Expression<Func<T, object>> orderBy = null,
             string orderDirection = null,
-            string[] includes = null
+            string[] includes = null, 
+            bool IgnoreGlobalFilters = false
             );
 
         Task<T> AddAsync(T entity);

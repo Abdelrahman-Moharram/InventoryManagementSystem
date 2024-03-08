@@ -18,4 +18,8 @@
     <ProjectReference Include="..\InventoryManagementSystem.Infrastructure\InventoryManagementSystem.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\Products\" />
+  </ItemGroup>
+
 </Project>

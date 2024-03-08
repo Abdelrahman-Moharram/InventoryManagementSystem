@@ -8,6 +8,7 @@ namespace InventoryManagementSystem.Domain.DTOs.ProductItems
 {
     public class GetProductItemIncludedDTO
     {
+        public string Id { get; set; }
         public string InventoryId { get; set; }
         public string? OrderId { get; set; }
 
