@@ -14,8 +14,9 @@ import Logout from './Pages/Auth/Logout.jsx';
 import AdminLayout from './Pages/Shared/AdminLayout.jsx';
 import Dashboard from './Pages/Admin/Dashboard.jsx';
 import IsAdmin from './Pages/Shared/Guard/IsAdmin.js';
-import Products from './Pages/Admin/Products.jsx';
+import Products from './Pages/Admin/Products/Products.jsx';
 import ProductDetails from './Pages/Admin/Products/ProductDetails.jsx';
+import EditProduct from './Pages/Admin/Products/EditProduct.jsx';
 
 const router = createBrowserRouter([
   {
@@ -40,6 +41,7 @@ const router = createBrowserRouter([
       {index:true, element:<Dashboard />},
       {path:"products", element:<Products />},
       {path:"products/:id", element:<ProductDetails />},
+      {path:"products/edit/:id", element:<EditProduct />},
       
     ]
   },

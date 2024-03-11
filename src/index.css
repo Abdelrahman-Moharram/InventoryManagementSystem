@@ -23,3 +23,19 @@ body {
     text-wrap: balance;
   }
 }
+
+.default-shadow{
+  box-shadow: 0px 0px 10px #000;
+}
+
+.default-shadow-hover:hover{
+  box-shadow: 0px 0px 5px #000;
+}
+
+.active{
+  color: rgb(209 213 219 / var(--tw-text-opacity));
+  background-color: rgb(31 41 55 / var(--tw-bg-opacity));
+}
+.active:hover{
+  color: white;
+}

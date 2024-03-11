@@ -1,10 +1,11 @@
 import axios from 'axios'
+import config from 'dotenv'
 
-const ServerUrl = "http://localhost:5241"
+
 const token = window ? window.localStorage.getItem("token"):"";
 
 const axiosClient = axios.create({
-    baseURL:"http://localhost:5241",
+    baseURL:process.env.SERVER_URL,
     headers:{
         Authorization: `Bearer ${token}`
     }

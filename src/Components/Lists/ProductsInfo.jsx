@@ -4,9 +4,8 @@ import { Link } from 'react-router-dom'
 
 
 const ProductInfo = ({product}) => {
-    console.log(product);
     return (
-      <div>
+      <div className='w-3/4 py-5 px-12 rounded-lg default-shadow'>
           {
               product?.name?
                   <div>

@@ -1,8 +1,10 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import axios from 'axios';
 import { jwtDecode } from "jwt-decode";
+import config from 'dotenv'
 
-const server = "http://localhost:5241/api/accounts/"
+
+const server = `${process.env.SERVER_URL}api/accounts/`
 const token = localStorage.getItem("token");
 const initialState = {
     user:token? jwtDecode(token):"",

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import DataTable from '../../Components/Tables/DataTable'
-import { getAllProducts } from '../../Api/Products'
+import DataTable from '../../../Components/Tables/DataTable'
+import { getAllProducts } from '../../../Api/Products'
 
 const Products = () => {
   const [products, setProducts] = useState([])
@@ -13,7 +13,9 @@ const Products = () => {
   },[])
   let keyfilter = []
   return (
-    <div className='w-full'>
+    
+    <div className='w-full p-5'>
+      <div className='default-shadow rounded-lg p-10 my-4 min-w-full'>
       {
         products[0]?
         <DataTable data={products} keys={Object.keys(products[0]).filter(
@@ -35,6 +37,7 @@ const Products = () => {
         :
         null
       }
+      </div>
     </div>
   )
 }
