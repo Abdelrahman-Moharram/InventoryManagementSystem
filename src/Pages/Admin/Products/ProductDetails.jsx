@@ -29,6 +29,7 @@ const ProductDetails = () => {
         <div className='default-shadow rounded-lg overflow-hidden'>
             {
             product?.images?
+            
                 <img 
                     src={process.env.SERVER_URL + product?.images[0]}
 

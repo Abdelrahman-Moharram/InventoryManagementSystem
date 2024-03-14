@@ -17,6 +17,8 @@ import IsAdmin from './Pages/Shared/Guard/IsAdmin.js';
 import Products from './Pages/Admin/Products/Products.jsx';
 import ProductDetails from './Pages/Admin/Products/ProductDetails.jsx';
 import EditProduct from './Pages/Admin/Products/EditProduct.jsx';
+import ToastProvider from './store/Toast/ToastProvider.jsx';
+import Delete from './Pages/Admin/Products/DeleteProduct.jsx';
 
 const router = createBrowserRouter([
   {
@@ -42,6 +44,8 @@ const router = createBrowserRouter([
       {path:"products", element:<Products />},
       {path:"products/:id", element:<ProductDetails />},
       {path:"products/edit/:id", element:<EditProduct />},
+      {path:"products/delete/:id", element:<Delete />},
+      {path:"products/add", element:<EditProduct />},
       
     ]
   },
@@ -76,7 +80,9 @@ const router = createBrowserRouter([
 createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <Provider store={store}>
-      <RouterProvider router={router} />
+      <ToastProvider>
+        <RouterProvider router={router} />
+      </ToastProvider>
     </Provider>
   </React.StrictMode>,
 )
