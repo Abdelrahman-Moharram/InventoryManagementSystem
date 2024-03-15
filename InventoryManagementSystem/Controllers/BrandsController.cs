@@ -60,7 +60,7 @@ namespace InventoryManagementSystem.Controllers
             return BadRequest(brandDTO);
         }
 
-        [HttpPost("Edit/{id}")]
+        [HttpPut("Edit/{id}")]
         [Authorize(Policy = "Permissions.Update.Brand")]
         public async Task<IActionResult> Update([FromBody] UpdateBrandDTO brandDTO, string id)
         {

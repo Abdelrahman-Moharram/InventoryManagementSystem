@@ -1,7 +1,7 @@
 ﻿
 namespace InventoryManagementSystem.Domain.DTOs.Category
 {
-    public class AddCategoryDTO : BaseDTO
+    public class AddCategoryDTO 
     {
         public string? Name { get; set; }
     }

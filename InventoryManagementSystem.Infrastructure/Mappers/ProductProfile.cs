@@ -14,7 +14,7 @@ namespace InventoryManagementSystem.Infrastructure.Mappers
             CreateMap<Product, GetProductDTO>()
                 .ForMember(dest=>dest.Colors, opt => opt.MapFrom(src=>src.ProductItems.Where(ii=>ii.ProductId == src.Id ).Select(i=>i.Color.ToLower()).Distinct().ToList()))
                 .ForMember(dest => dest.ProductsInventory, opt => opt.MapFrom(src => src.Inventories.Select(i => new SimpleModule { Id=i.Id, Name=i.Name}).ToList()))
-                .ForMember(dest => dest.Amount,opt => opt.MapFrom(src=>src.Amount))
+                .ForMember(dest => dest.Amount,opt => opt.MapFrom(src=>src.ProductItems.Count()))
                 .ForMember(dest => dest.BrandName,opt => opt.MapFrom(src => src.Brand.Name))
                 .ForMember(dest => dest.CategoryName,opt => opt.MapFrom(src => src.Category.Name))
                 .ForMember(dest=>dest.Images, opt => opt.MapFrom(src => src.UploadedFiles.Select(i=>$"/Products/{i.FileName}").ToList()))
