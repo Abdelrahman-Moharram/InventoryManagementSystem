@@ -26,6 +26,7 @@ namespace InventoryManagementSystem.Infrastructure.Mappers
                             Id = i.Id, 
                             Color = i.Color.ToLower(),
                             InventoryId = i.InventoryId, 
+                            InventoryName= src.Inventories.FirstOrDefault(pid=>pid.Id == i.InventoryId).Name,
                             IsSelled=i.IsSelled, 
                             OrderId=i.OrderId, 
                             SerialNo=i.SerialNo
@@ -40,7 +41,8 @@ namespace InventoryManagementSystem.Infrastructure.Mappers
                 .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category.Name));
 
             CreateMap<AddProductDTO, Product>().ReverseMap();
-            CreateMap<UpdateProductDTO, Product>().ReverseMap();
-        }
+            CreateMap<UpdateProductDTO, Product>();
+            CreateMap<Product, UpdateProductDTO>()
+                .ForMember(dest => dest.ProductImages, opt => opt.MapFrom(src => src.UploadedFiles.Select(i => $"/Products/{i.FileName}").ToList()));        }
     }
 }

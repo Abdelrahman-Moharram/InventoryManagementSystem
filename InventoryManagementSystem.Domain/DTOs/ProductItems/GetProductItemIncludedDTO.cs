@@ -10,6 +10,7 @@ namespace InventoryManagementSystem.Domain.DTOs.ProductItems
     {
         public string Id { get; set; }
         public string InventoryId { get; set; }
+        public string InventoryName { get; set; }
         public string? OrderId { get; set; }
 
         public bool IsSelled { get; set; } = false;

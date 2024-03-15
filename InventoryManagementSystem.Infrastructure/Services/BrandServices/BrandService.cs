@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using InventoryManagementSystem.Domain.DTOs;
 using InventoryManagementSystem.Domain.DTOs.Brand;
 using InventoryManagementSystem.Domain.DTOs.Response;
 using InventoryManagementSystem.Domain.Models;
@@ -28,6 +29,14 @@ namespace InventoryManagementSystem.Infrastructure.Services.BrandServices
         {
             return _mapper.Map<IEnumerable<GetBrandDTO>>(await _unitOfWork.Brands.GetAllAsync(new[] { "Products" }));
         }
+
+        public async Task<IEnumerable<SimpleModule>> GetAsSelectList()
+        {
+            return _mapper.Map<IEnumerable<SimpleModule>>(
+                    await _unitOfWork.Brands.GetAsSelectList(i => new SimpleModule { Id = i.Id, Name = i.Name })
+                );
+        }
+
         public async Task<GetBrandDTO> GetById(string id)
         {
             return _mapper.Map<GetBrandDTO>(await _unitOfWork.Brands.GetByIdAsync(id));

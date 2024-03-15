@@ -128,7 +128,7 @@ namespace InventoryManagementSystem.Controllers
         [HttpGet("/api/Permissions")]
         public Task<IActionResult> PermissionsList()
         {
-            return Task.FromResult<IActionResult>(Ok(Task.Run(() => Permissions.AllPermissionsList())));
+            return Task.FromResult<IActionResult>(Ok(Task.Run(() => Permissions.AllPermissionsList()).Result));
         }
 
     }

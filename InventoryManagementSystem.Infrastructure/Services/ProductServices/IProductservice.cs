@@ -9,6 +9,7 @@ namespace InventoryManagementSystem.Infrastructure.Services.Productservices
     {
         Task<IEnumerable<GetProductDTO>> GetAll();
         Task<IEnumerable<GetProductForTableDTO>> GetAllAsDataTable();
+        Task<UpdateProductDTO> GetProductForFormGetById(string id);
         Task<IEnumerable<GetProductDTO>> GetAllWithBaseIncludes();
         Task<GetProductDTO> GetById(string id);
         Task<IEnumerable<GetProductDTO>> Search(string SearchQuery);

@@ -44,6 +44,9 @@ namespace InventoryManagementSystem.Infrastructure.Services.Productservices
         public async Task<GetProductDTO> GetById(string id) => 
             _mapper.Map<GetProductDTO>(await _unitOfWork.Products.Find(i=>i.Id == id, includes: new[] { "Inventories", "ProductsInventory", "ProductItems", "Brand", "Category", "UploadedFiles" }));
 
+        public async Task<UpdateProductDTO> GetProductForFormGetById(string id) =>
+            _mapper.Map<UpdateProductDTO>(await _unitOfWork.Products.Find(i => i.Id == id, includes: new[] { "Inventories", "ProductsInventory", "ProductItems", "Brand", "Category", "UploadedFiles" }));
+
         public async Task<IEnumerable<GetProductDTO>> Search(string SearchQuery) => 
             _mapper.Map<IEnumerable<GetProductDTO>>(
                         await _unitOfWork.Products.FindAllAsync(

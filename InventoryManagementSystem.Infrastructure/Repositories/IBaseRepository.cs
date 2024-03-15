@@ -27,7 +27,7 @@ namespace InventoryManagementSystem.Infrastructure.Repositories
         Task<IEnumerable<T>> AddRangeAsync(IEnumerable<T> entities);
         Task<T> UpdateAsync(T entity);
         Task<T> DeleteAsync(T entity);
-
+        Task<ICollection<TType>> GetAsSelectList<TType>(Expression<Func<T, TType>> select) where TType : class;
         Task<int> CountAsync();
         Task<int> CountAsync(Expression<Func<T, bool>> expression);
     }

@@ -38,6 +38,12 @@ namespace InventoryManagementSystem.Controllers
         public async Task<IActionResult> Details(string id) => Ok(await _categoryService.GetById(id));
 
 
+        //GetAsSelectList
+        [HttpGet("as-select")]
+        [Authorize(Policy = "Permissions.Read.Category")]
+        public async Task<IActionResult> AsSelect() => Ok(await _categoryService.GetAsSelectList());
+
+
         [HttpPost("add")]
         [Authorize(Policy = "Permissions.Create.Category")]
         public async Task<IActionResult> Add([FromBody] AddCategoryDTO CategoryDTO)
@@ -83,6 +89,8 @@ namespace InventoryManagementSystem.Controllers
             }
             return BadRequest();
         }
+
+        
 
     }
 }

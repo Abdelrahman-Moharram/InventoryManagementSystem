@@ -29,15 +29,21 @@ namespace InventoryManagementSystem.Controllers
         public async Task<IActionResult> Index() => Ok(await _brandService.GetAll());
 
 
+        [HttpGet("as-select")]
+        [Authorize(Policy = "Permissions.Read.Brand")]
+        public async Task<IActionResult> AsSelect() => Ok(await _brandService.GetAsSelectList());
+
         [HttpGet("all/")]
         [Authorize(Policy = "Permissions.Read.Brand")]
         public async Task<IActionResult> ListBrandsWithProducts() => Ok(await _brandService.GetAllWithBaseIncludes());
 
+        
 
         [HttpGet("{id}")]
         [Authorize(Policy = "Permissions.Read.Brand")]
         public async Task<IActionResult> Details(string id) => Ok(await _brandService.GetById(id));
-
+        
+        //GetAsSelectList
 
         [HttpPost("add")]
         [Authorize(Policy = "Permissions.Create.Brand")]

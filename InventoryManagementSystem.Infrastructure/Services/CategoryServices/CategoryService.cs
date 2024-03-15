@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using InventoryManagementSystem.Domain.DTOs;
 using InventoryManagementSystem.Domain.DTOs.Category;
 using InventoryManagementSystem.Domain.DTOs.Response;
 using InventoryManagementSystem.Domain.Models;
@@ -32,6 +33,15 @@ namespace InventoryManagementSystem.Infrastructure.Services.CategoryServices
         {
             return _mapper.Map<GetCategoryDTO>(await _unitOfWork.Categories.GetByIdAsync(id));
         }
+        public async Task<IEnumerable<SimpleModule>> GetAsSelectList()
+        {
+            return _mapper.Map<IEnumerable<SimpleModule>>(
+                    await _unitOfWork.Categories.GetAsSelectList(i=>new SimpleModule { Id = i.Id, Name=i.Name})
+                );
+        }
+
+
+
         public async Task<IEnumerable<GetCategoryDTO>> Search(string SearchQuery)
         {
             return _mapper.Map<IEnumerable<GetCategoryDTO>>(
@@ -110,6 +120,8 @@ namespace InventoryManagementSystem.Infrastructure.Services.CategoryServices
                 return new BaseResponse { Message = $"Something went wrong while Deleting {category.Name}", IsSucceeded = false };
             }
         }
+
+
 
     }
 }

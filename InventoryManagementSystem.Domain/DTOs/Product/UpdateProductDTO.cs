@@ -9,5 +9,6 @@ namespace InventoryManagementSystem.Domain.DTOs.Product
     public class UpdateProductDTO : AddProductDTO
     {
         public string Id {  get; set; }
+        public IEnumerable<string>? ProductImages { get; set; }
     }
 }

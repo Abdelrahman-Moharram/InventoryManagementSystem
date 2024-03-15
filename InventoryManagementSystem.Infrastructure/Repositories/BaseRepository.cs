@@ -35,6 +35,12 @@ namespace InventoryManagementSystem.Infrastructure.Repositories
             return await HandleIncludes(_context.Set<T>(), includes, IgnoreGlobalFilters).ToListAsync();
         }
 
+        public async Task<ICollection<TType>> GetAsSelectList<TType> (Expression<Func<T, TType>> select) where TType : class
+        {
+            return await _context.Set<T>().Select(select).ToListAsync();
+        }
+
+
         public async Task<T> GetByIdAsync(string id)
         {
             return await _context.Set<T>().FindAsync(id);

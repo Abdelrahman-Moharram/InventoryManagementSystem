@@ -18,6 +18,11 @@ namespace InventoryManagementSystem.Infrastructure.Mappers
                             ).ToList()
                         )
                     ).ReverseMap();
+            
+            CreateMap<Category, SimpleModule>()
+                .ForMember(dest => dest.Id,
+                        opt => opt.MapFrom(src =>new SimpleModule { Id= src.Id , Name=src.Name})
+                    ).ReverseMap();
 
             CreateMap<AddCategoryDTO, Category>().ReverseMap();
             CreateMap<UpdateCategoryDTO, Category>().ReverseMap();

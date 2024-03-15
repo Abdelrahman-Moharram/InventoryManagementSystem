@@ -39,6 +39,10 @@ namespace InventoryManagementSystem.Controllers
         public async Task<IActionResult> ListProductsWithInners() => Ok(await _productService.GetAllWithBaseIncludes());
 
 
+        [HttpGet("form/{id}")]
+        [Authorize(Policy = "Permissions.Read.Product")]
+        public async Task<IActionResult> ProductForForm(string id) => Ok(await _productService.GetProductForFormGetById(id));
+
         [HttpGet("{id}")]
         [Authorize(Policy = "Permissions.Read.Product")]
         public async Task<IActionResult> Details(string id) => Ok(await _productService.GetById(id));
