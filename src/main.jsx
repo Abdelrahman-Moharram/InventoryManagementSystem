@@ -19,6 +19,8 @@ import ProductDetails from './Pages/Admin/Products/ProductDetails.jsx';
 import EditProduct from './Pages/Admin/Products/EditProduct.jsx';
 import ToastProvider from './store/Toast/ToastProvider.jsx';
 import Delete from './Pages/Admin/Products/DeleteProduct.jsx';
+import CategoriesOP from './Pages/Admin/Categories/CategoriesOP.jsx';
+import BrandsOP from './Pages/Admin/Brands/BrandsOP.jsx';
 
 const router = createBrowserRouter([
   {
@@ -41,11 +43,15 @@ const router = createBrowserRouter([
     ,
     children:[
       {index:true, element:<Dashboard />},
+
       {path:"products", element:<Products />},
       {path:"products/:id", element:<ProductDetails />},
       {path:"products/edit/:id", element:<EditProduct />},
       {path:"products/delete/:id", element:<Delete />},
       {path:"products/add", element:<EditProduct />},
+
+      {path:"categories", element:<CategoriesOP />},
+      {path:"brands", element:<BrandsOP />}
       
     ]
   },
